@@ -1,0 +1,14 @@
+[
+  {
+    "id": "metodo",
+    "label": "Procedimentos e métodos",
+    "type": "textarea",
+    "default": ""
+  },
+  {
+    "id": "dados_previstos",
+    "label": "Quais dados serão coletados?",
+    "type": "textarea",
+    "default": ""
+  }
+]

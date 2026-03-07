@@ -1,0 +1,333 @@
+{
+  "app_id": "app_02",
+  "username": "preview_app_02",
+  "responses": {
+    "visao_geral": {},
+    "problema": {
+      "q_001": {
+        "tipo": "multipla_escolha",
+        "pergunta": "Qual variável está diretamente ligada à origem da demanda elétrica do motor no sistema de bombeamento?",
+        "alternativas": {
+          "a": "A temperatura ambiente da instalação",
+          "b": "A distância entre a fonte e o motor",
+          "c": "O conjugado exigido pela carga hidráulica da bomba",
+          "d": "O tipo de sistema elétrico, independentemente da carga"
+        },
+        "resposta_escolhida": "d",
+        "alternativa_correta": "c"
+      },
+      "q_002": {
+        "tipo": "texto",
+        "pergunta": "Explique, com suas palavras, como a carga hidráulica do sistema de bombeamento influencia a demanda elétrica do motor da motobomba.",
+        "resposta": "aa"
+      },
+      "q_003": {
+        "tipo": "multipla_escolha",
+        "pergunta": "Ao analisar a placa de identificação do motor, qual informação permite identificar diretamente a corrente nominal de operação?",
+        "alternativas": {
+          "a": "A cor da carcaça do motor",
+          "b": "Os valores de corrente indicados em ampères associados à tensão nominal",
+          "c": "A posição física do motor na instalação",
+          "d": "A marca do fabricante"
+        },
+        "resposta_escolhida": "",
+        "alternativa_correta": "b"
+      },
+      "q_004": {
+        "tipo": "texto",
+        "pergunta": "Potência nominal (cv ou kW). Informe o valor e a unidade exatamente como aparece na placa.",
+        "resposta": ""
+      },
+      "q_005": {
+        "tipo": "texto",
+        "pergunta": "Tensão nominal (V). Informe todas as tensões indicadas na placa do motor.",
+        "resposta": ""
+      },
+      "q_006": {
+        "tipo": "texto",
+        "pergunta": "Corrente nominal (A). Informe os valores correspondentes a cada tensão indicada.",
+        "resposta": ""
+      },
+      "q_007": {
+        "tipo": "texto",
+        "pergunta": "Fator de potência (cos φ). Informe o valor indicado na placa. Caso não esteja presente, escreva: 'não informado'.",
+        "resposta": ""
+      },
+      "q_008": {
+        "tipo": "texto",
+        "pergunta": "Rendimento (η). Informe o rendimento indicado na placa. Caso não esteja presente, escreva: 'não informado'.",
+        "resposta": ""
+      },
+      "q_009": {
+        "tipo": "texto",
+        "pergunta": "Tipo de alimentação. Indique se o motor é monofásico ou trifásico e cite a evidência observada na placa.",
+        "resposta": ""
+      },
+      "q_010": {
+        "tipo": "multipla_escolha",
+        "pergunta": "Qual situação representa um exemplo de incerteza em um levantamento técnico?",
+        "alternativas": {
+          "a": "Tensão da rede apenas assumida, sem medição",
+          "b": "Potência registrada diretamente da placa do motor",
+          "c": "Identificação do fabricante do equipamento",
+          "d": "Leitura da frequência indicada na placa do motor"
+        },
+        "resposta_escolhida": "",
+        "alternativa_correta": "a"
+      },
+      "q_011": {
+        "tipo": "texto",
+        "pergunta": "Descreva um exemplo de dado que pode apresentar incerteza em um levantamento técnico do sistema de bombeamento e explique como essa incerteza pode influenciar os cálculos elétricos.",
+        "resposta": ""
+      },
+      "q_012": {
+        "tipo": "multipla_escolha",
+        "pergunta": "Qual conjunto de informações é fundamental para caracterizar a alimentação elétrica do motor da motobomba?",
+        "alternativas": {
+          "a": "Somente a marca do cabo utilizado",
+          "b": "Tensão da rede, tipo de sistema e distância até o motor",
+          "c": "Apenas a altura do reservatório superior",
+          "d": "Somente a potência hidráulica da bomba"
+        },
+        "resposta_escolhida": "",
+        "alternativa_correta": "b"
+      },
+      "q_013": {
+        "tipo": "multipla_escolha",
+        "pergunta": "Ao observar os cabos de alimentação no quadro apresentado, qual tipo de sistema elétrico parece estar sendo utilizado?",
+        "alternativas": {
+          "a": "Sistema monofásico",
+          "b": "Sistema bifásico",
+          "c": "Sistema trifásico",
+          "d": "Sistema de corrente contínua"
+        },
+        "resposta_escolhida": "",
+        "alternativa_correta": "c"
+      },
+      "q_014": {
+        "tipo": "multipla_escolha",
+        "pergunta": "Qual é a principal função dos disjuntores presentes no quadro de distribuição?",
+        "alternativas": {
+          "a": "Aumentar a tensão da rede elétrica",
+          "b": "Proteger os circuitos contra sobrecorrente e curto-circuito",
+          "c": "Controlar o fluxo de água no reservatório",
+          "d": "Alterar a frequência da rede elétrica"
+        },
+        "resposta_escolhida": "",
+        "alternativa_correta": "b"
+      },
+      "q_015": {
+        "tipo": "texto",
+        "pergunta": "Observe o quadro de distribuição apresentado na imagem e explique, com suas palavras, por que o conhecimento da tensão da rede, do tipo de sistema elétrico e da distância até o motor são informações importantes para analisar a alimentação elétrica da motobomba.",
+        "resposta": ""
+      },
+      "q_016": {
+        "tipo": "multipla_escolha",
+        "pergunta": "Qual fator físico da instalação influencia diretamente o dimensionamento dos condutores elétricos?",
+        "alternativas": {
+          "a": "A cor da parede onde passa o eletroduto",
+          "b": "O método de instalação e a temperatura ambiente",
+          "c": "O nome do operador do sistema",
+          "d": "A idade do reservatório"
+        },
+        "resposta_escolhida": "",
+        "alternativa_correta": "b"
+      },
+      "q_017": {
+        "tipo": "multipla_escolha",
+        "pergunta": "Qual é a principal função do eletroduto em uma instalação elétrica?",
+        "alternativas": {
+          "a": "Aumentar a potência do motor",
+          "b": "Proteger e organizar o trajeto dos condutores elétricos",
+          "c": "Reduzir o consumo de energia do motor",
+          "d": "Substituir os dispositivos de proteção do circuito"
+        },
+        "resposta_escolhida": "",
+        "alternativa_correta": "b"
+      },
+      "q_018": {
+        "tipo": "texto",
+        "pergunta": "Explique, com suas palavras, como o método de instalação dos condutores (por exemplo, em eletrodutos), a temperatura ambiente e o comprimento do circuito podem influenciar o dimensionamento elétrico da alimentação do motor.",
+        "resposta": ""
+      },
+      "q_019": {
+        "tipo": "multipla_escolha",
+        "pergunta": "Ao definir o foco elétrico do problema, qual aspecto do sistema passa a ser o principal objeto de análise?",
+        "alternativas": {
+          "a": "A quantidade de água armazenada no reservatório",
+          "b": "O dimensionamento da alimentação elétrica do motor",
+          "c": "A altura estrutural do prédio",
+          "d": "A posição física da bomba no reservatório"
+        },
+        "resposta_escolhida": "",
+        "alternativa_correta": "b"
+      },
+      "q_020": {
+        "tipo": "texto",
+        "pergunta": "Explique, com suas palavras, por que é importante definir claramente o foco elétrico do problema antes de iniciar os cálculos do dimensionamento da alimentação do motor.",
+        "resposta": ""
+      },
+      "q_021": {
+        "tipo": "multipla_escolha",
+        "pergunta": "Qual conjunto de aspectos representa corretamente o foco de análise do sistema elétrico neste estudo?",
+        "alternativas": {
+          "a": "Volume do reservatório, altura da caixa d’água e tipo de tubulação",
+          "b": "Corrente de operação, corrente de partida, condutores, ligação do motor e queda de tensão",
+          "c": "Temperatura da água, pressão hidráulica e tipo de válvula",
+          "d": "Quantidade de moradores do prédio e consumo diário de água"
+        },
+        "resposta_escolhida": "",
+        "alternativa_correta": "b"
+      },
+      "q_022": {
+        "tipo": "texto",
+        "pergunta": "Explique, com suas palavras, por que a corrente de operação, a corrente de partida, o dimensionamento dos condutores, o tipo de ligação do motor e a queda de tensão são aspectos importantes na análise da alimentação elétrica de um motor.",
+        "resposta": ""
+      },
+      "q_023": {
+        "tipo": "multipla_escolha",
+        "pergunta": "Ao delimitar o escopo deste estudo, qual abordagem representa corretamente o foco da análise?",
+        "alternativas": {
+          "a": "Analisar detalhadamente todas as normas técnicas aplicáveis",
+          "b": "Investigar exclusivamente os fundamentos elétricos envolvidos na alimentação do motor",
+          "c": "Projetar completamente o sistema hidráulico do bombeamento",
+          "d": "Definir todos os dispositivos de proteção elétrica da instalação"
+        },
+        "resposta_escolhida": "",
+        "alternativa_correta": "b"
+      },
+      "q_024": {
+        "tipo": "texto",
+        "pergunta": "Explique, com suas palavras, por que é importante delimitar o escopo de um problema de engenharia antes de iniciar a análise técnica do sistema.",
+        "resposta": ""
+      },
+      "q_025": {
+        "tipo": "multipla_escolha",
+        "pergunta": "Qual das alternativas representa corretamente a pergunta que orienta a análise do sistema de bombeamento estudado?",
+        "alternativas": {
+          "a": "Como aumentar a quantidade de água armazenada no reservatório superior?",
+          "b": "Como dimensionar corretamente a alimentação elétrica do motor da bomba?",
+          "c": "Como modificar o sistema hidráulico do reservatório?",
+          "d": "Como alterar a estrutura do prédio para instalar uma nova bomba?"
+        },
+        "resposta_escolhida": "a",
+        "alternativa_correta": "b"
+      },
+      "q_026": {
+        "tipo": "texto",
+        "pergunta": "Explique, com suas palavras, por que a definição de uma pergunta norteadora é importante para orientar a investigação de um problema técnico em engenharia.",
+        "resposta": "qweqweqweqwe"
+      },
+      "q_027": {
+        "tipo": "multipla_escolha",
+        "pergunta": "No modelo sistêmico utilizado para analisar o sistema elétrico da motobomba, qual das alternativas representa corretamente um exemplo de variável de entrada?",
+        "alternativas": {
+          "a": "A quantidade de água armazenada no reservatório",
+          "b": "A potência do motor elétrico",
+          "c": "A posição física da bomba no reservatório",
+          "d": "O número de moradores do prédio"
+        },
+        "resposta_escolhida": "",
+        "alternativa_correta": "b"
+      },
+      "q_028": {
+        "tipo": "texto",
+        "pergunta": "Explique, com suas palavras, por que a potência do motor, a tensão de alimentação, a distância da fonte e o fator de potência podem ser considerados variáveis de entrada no modelo sistêmico do problema.",
+        "resposta": ""
+      },
+      "q_029": {
+        "tipo": "multipla_escolha",
+        "pergunta": "No modelo sistêmico do problema elétrico, qual atividade representa corretamente uma etapa de processamento?",
+        "alternativas": {
+          "a": "Observar a placa do motor",
+          "b": "Registrar a tensão da rede",
+          "c": "Calcular a corrente nominal do motor",
+          "d": "Identificar o tipo de reservatório"
+        },
+        "resposta_escolhida": "",
+        "alternativa_correta": "c"
+      },
+      "q_030": {
+        "tipo": "texto",
+        "pergunta": "Explique, com suas palavras, por que os cálculos elétricos realizados durante a análise podem ser considerados a etapa de processamento no modelo sistêmico do problema.",
+        "resposta": "aa111"
+      },
+      "q_031": {
+        "tipo": "multipla_escolha",
+        "pergunta": "No modelo sistêmico aplicado ao sistema elétrico da motobomba, qual das alternativas representa um exemplo de saída do sistema?",
+        "alternativas": {
+          "a": "A potência nominal indicada na placa do motor",
+          "b": "A distância entre a fonte de energia e o motor",
+          "c": "A seção adequada do condutor elétrico",
+          "d": "A temperatura ambiente da instalação"
+        },
+        "resposta_escolhida": "",
+        "alternativa_correta": "c"
+      },
+      "q_032": {
+        "tipo": "multipla_escolha",
+        "pergunta": "Ao utilizar uma tabela de capacidade de condução de corrente, qual informação principal ela permite determinar?",
+        "alternativas": {
+          "a": "A potência do motor elétrico",
+          "b": "A tensão da rede elétrica",
+          "c": "A seção adequada do condutor para determinada corrente",
+          "d": "O número de equipamentos conectados ao circuito"
+        },
+        "resposta_escolhida": "",
+        "alternativa_correta": "c"
+      },
+      "q_033": {
+        "tipo": "multipla_escolha",
+        "pergunta": "De acordo com a tabela apresentada, qual grandeza está relacionada diretamente à capacidade de condução de corrente de um cabo elétrico?",
+        "alternativas": {
+          "a": "A cor do isolamento do cabo",
+          "b": "A seção transversal do condutor (mm²)",
+          "c": "A marca do fabricante",
+          "d": "A altura do reservatório"
+        },
+        "resposta_escolhida": "",
+        "alternativa_correta": "b"
+      },
+      "q_034": {
+        "tipo": "texto",
+        "pergunta": "Explique, com suas palavras, por que a corrente do circuito e a seção do condutor estão diretamente relacionadas no dimensionamento de uma instalação elétrica.",
+        "resposta": ""
+      },
+      "q_035": {
+        "tipo": "multipla_escolha",
+        "pergunta": "Ao validar a estrutura do problema, qual aspecto deve ser verificado antes de iniciar a investigação técnica?",
+        "alternativas": {
+          "a": "Se o reservatório possui capacidade suficiente de água",
+          "b": "Se o modelo inclui as variáveis elétricas necessárias para a análise",
+          "c": "Se a tubulação do sistema hidráulico foi substituída recentemente",
+          "d": "Se o prédio possui mais de um reservatório superior"
+        },
+        "resposta_escolhida": "",
+        "alternativa_correta": "b"
+      },
+      "q_036": {
+        "tipo": "texto",
+        "pergunta": "Explique, com suas palavras, por que a validação do problema é importante antes de iniciar os cálculos elétricos da investigação.",
+        "resposta": ""
+      }
+    },
+    "investigacao": {
+      "metodo": "",
+      "dados_previstos": ""
+    },
+    "solucao": {
+      "proposta": "",
+      "viabilidade": "Média"
+    },
+    "memorial": {
+      "memorial_texto": ""
+    },
+    "avaliacao": {
+      "autoavaliacao": "",
+      "nota_percebida": 0.0
+    }
+  },
+  "meta": {
+    "status": "em_andamento"
+  }
+}

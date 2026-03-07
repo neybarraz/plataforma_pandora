@@ -1,0 +1,30 @@
+[
+  {
+    "id": "funcionamento_app",
+    "label": "Como funciona este aplicativo",
+    "type": "textarea",
+    "default": "",
+    "help": "Descreva como o aplicativo deve ser utilizado durante a disciplina."
+  },
+  {
+    "id": "visao_geral_disciplina",
+    "label": "Visão geral da disciplina",
+    "type": "textarea",
+    "default": "",
+    "help": "Explique os objetivos da disciplina e o que será desenvolvido ao longo das atividades."
+  },
+  {
+    "id": "problema_central",
+    "label": "Problema central da disciplina",
+    "type": "textarea",
+    "default": "",
+    "help": "Descreva o problema central que orienta as atividades da disciplina."
+  },
+  {
+    "id": "avaliacao_disciplina",
+    "label": "Critérios de avaliação da disciplina",
+    "type": "textarea",
+    "default": "",
+    "help": "Explique como os estudantes serão avaliados durante a disciplina."
+  }
+]

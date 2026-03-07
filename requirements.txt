@@ -1,0 +1,6 @@
+streamlit
+pandas
+sqlalchemy
+passlib
+python-slugify
+python-dotenv
