@@ -3,7 +3,7 @@
 import streamlit as st
 from datetime import datetime
 
-from config import ADMIN_USERNAME, ADMIN_PASSWORD
+from config import ADMIN_USERNAME, ADMIN_PASSWORD, APP_CATALOG
 from core.permissions.app_access import get_allowed_apps
 from core.users.auth_repo import get_user, set_password_and_activate, update_last_login
 from core.auth.password import hash_password, verify_password
@@ -17,7 +17,7 @@ def _init_session():
     st.session_state.setdefault("current_view", "home")
     st.session_state.setdefault("current_app", None)
 
-    st.session_state.setdefault("auth_mode", "login")  # login | set_password
+    st.session_state.setdefault("auth_mode", "login")
     st.session_state.setdefault("pending_username", None)
 
 
@@ -54,9 +54,6 @@ def render_header():
     with col2:
         user = st.session_state["auth_user"]
 
-        # ============================================================
-        # USUÁRIO JÁ LOGADO
-        # ============================================================
         if user:
             st.write(
                 f"Usuário: **{user}** | Último acesso: {st.session_state['last_login']} | Progresso: {st.session_state['progress_overall']}%"
@@ -82,9 +79,6 @@ def render_header():
 
             return
 
-        # ============================================================
-        # CRIAR SENHA (PRIMEIRO LOGIN)
-        # ============================================================
         if st.session_state["auth_mode"] == "set_password":
             username = st.session_state.get("pending_username")
 
@@ -135,36 +129,29 @@ def render_header():
 
             return
 
-        # ============================================================
-        # LOGIN NORMAL
-        # ============================================================
         username = st.text_input("Username", key="login_username").strip().lower()
         password = st.text_input("Senha", type="password", key="login_password")
 
         if st.button("Entrar", key="btn_login"):
 
-            # ---------- ADMIN ----------
             if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
                 _finish_login(username)
                 st.success("Login admin realizado")
                 st.rerun()
                 return
 
-            # ---------- ALUNO ----------
             user_data = get_user(username)
 
             if not user_data:
                 st.error("Usuário não encontrado.")
                 return
 
-            # primeiro acesso
             if user_data["first_login"] == 1 or not user_data["password_hash"]:
                 st.session_state["auth_mode"] = "set_password"
                 st.session_state["pending_username"] = username
                 st.rerun()
                 return
 
-            # login normal
             if not verify_password(password, user_data["password_hash"]):
                 st.error("Senha incorreta.")
                 return
@@ -179,6 +166,6 @@ def get_allowed_apps_for_current_user():
 
     user = st.session_state.get("auth_user")
     if not user:
-        return set()
+        return {app["app_id"] for app in APP_CATALOG}
 
     return get_allowed_apps(user)
