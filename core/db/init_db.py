@@ -43,6 +43,19 @@ CREATE TABLE IF NOT EXISTS answers (
     is_correct INTEGER,
     answered_at TEXT
 );
+
+CREATE TABLE IF NOT EXISTS app_user_data (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT NOT NULL,
+    app_id TEXT NOT NULL,
+    payload TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    UNIQUE(username, app_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_app_user_data_username_app
+ON app_user_data (username, app_id);
 """
 
 POSTGRES_SCHEMA_SQL = """
@@ -82,6 +95,19 @@ CREATE TABLE IF NOT EXISTS answers (
     is_correct INTEGER,
     answered_at TEXT
 );
+
+CREATE TABLE IF NOT EXISTS app_user_data (
+    id SERIAL PRIMARY KEY,
+    username TEXT NOT NULL,
+    app_id TEXT NOT NULL,
+    payload JSONB NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(username, app_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_app_user_data_username_app
+ON app_user_data (username, app_id);
 """
 
 
