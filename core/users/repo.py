@@ -6,6 +6,7 @@ from datetime import datetime
 
 from core.db.conn import get_conn
 from core.users.username_generator import normalize_display_name, generate_base_username
+from core.auth.password import hash_password
 
 DATABASE_URL = os.getenv("DATABASE_URL", "").strip()
 
@@ -63,9 +64,12 @@ def make_unique_username(base: str) -> str:
         i += 1
 
 
-def create_user(display_name: str) -> Tuple[bool, str, str]:
+def create_user(display_name: str, initial_password: str | None = None) -> Tuple[bool, str, str]:
     """
-    Cria usuário com first_login=1 e password_hash NULL.
+    Cria usuário.
+    - Se initial_password for informada: cria com senha ativa e first_login = 0
+    - Se initial_password não for informada: cria com password_hash NULL e first_login = 1
+
     Retorna (created, username, message)
     """
     display = normalize_display_name(display_name)
@@ -90,6 +94,18 @@ def create_user(display_name: str) -> Tuple[bool, str, str]:
         if existing:
             return (False, username, "Username já existe.")
 
+        if initial_password and initial_password.strip():
+            password_hash = hash_password(initial_password.strip())
+            cur.execute(
+                f"""
+                INSERT INTO users (nome, username, password_hash, first_login, last_login)
+                VALUES ({ph}, {ph}, {ph}, 0, NULL)
+                """,
+                (display, username, password_hash),
+            )
+            conn.commit()
+            return (True, username, "Usuário criado com senha inicial.")
+
         cur.execute(
             f"""
             INSERT INTO users (nome, username, password_hash, first_login, last_login)
@@ -98,7 +114,7 @@ def create_user(display_name: str) -> Tuple[bool, str, str]:
             (display, username),
         )
         conn.commit()
-        return (True, username, "Usuário criado.")
+        return (True, username, "Usuário criado para primeiro acesso.")
     finally:
         conn.close()
 
@@ -143,20 +159,33 @@ def list_users(limit: int = 500) -> List[Dict]:
         conn.close()
 
 
-def reset_password(username: str) -> None:
+def reset_password(username: str, new_password: str | None = None) -> None:
     ph = _ph()
     conn = get_conn()
 
     try:
         cur = conn.cursor()
-        cur.execute(
-            f"""
-            UPDATE users
-            SET password_hash = NULL, first_login = 1
-            WHERE username = {ph}
-            """,
-            (username,),
-        )
+
+        if new_password and new_password.strip():
+            password_hash = hash_password(new_password.strip())
+            cur.execute(
+                f"""
+                UPDATE users
+                SET password_hash = {ph}, first_login = 0
+                WHERE username = {ph}
+                """,
+                (password_hash, username),
+            )
+        else:
+            cur.execute(
+                f"""
+                UPDATE users
+                SET password_hash = NULL, first_login = 1
+                WHERE username = {ph}
+                """,
+                (username,),
+            )
+
         conn.commit()
     finally:
         conn.close()
