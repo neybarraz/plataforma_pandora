@@ -14,8 +14,12 @@ def using_postgres() -> bool:
 def get_conn():
     if using_postgres():
         import psycopg
+        from psycopg.rows import dict_row
 
-        conn = psycopg.connect(DATABASE_URL)
+        conn = psycopg.connect(
+            DATABASE_URL,
+            row_factory=dict_row
+        )
         return conn
 
     conn = sqlite3.connect(DATABASE_PATH, check_same_thread=False)
