@@ -15,6 +15,26 @@ def _ph():
     return "%s" if DATABASE_URL else "?"
 
 
+def _row_to_dict(row):
+    if row is None:
+        return None
+
+    if isinstance(row, dict):
+        return row
+
+    if hasattr(row, "keys"):
+        return {key: row[key] for key in row.keys()}
+
+    return {
+        "id": row[0],
+        "nome": row[1],
+        "username": row[2],
+        "password_hash": row[3],
+        "first_login": row[4],
+        "last_login": row[5],
+    }
+
+
 def get_user(username: str):
     conn = get_conn()
     ph = _ph()
@@ -29,7 +49,7 @@ def get_user(username: str):
         cur = conn.cursor()
         cur.execute(sql, (username,))
         row = cur.fetchone()
-        return row
+        return _row_to_dict(row)
 
     finally:
         conn.close()
