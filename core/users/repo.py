@@ -1,42 +1,60 @@
 # core/users/repo.py
 
-from typing import Iterable, Optional, Tuple, List, Dict
+import os
+from typing import Tuple, List, Dict
 from datetime import datetime
 
-from core.db.connection import get_conn
 from core.db.conn import get_conn
 from core.users.username_generator import normalize_display_name, generate_base_username
 
+DATABASE_URL = os.getenv("DATABASE_URL", "").strip()
 
-def list_users():
+
+def _ph() -> str:
     """
-    Retorna lista de dicts: [{"username":..., "nome":...}, ...]
+    Retorna o placeholder correto para o banco atual.
+    SQLite  -> ?
+    Postgres -> %s
     """
-    conn = get_conn()
-    try:
-        rows = conn.execute(
-            "SELECT username, nome FROM users ORDER BY nome COLLATE NOCASE"
-        ).fetchall()
-        return [{"username": r["username"], "nome": r["nome"]} for r in rows]
-    finally:
-        conn.close()
+    return "%s" if DATABASE_URL else "?"
+
+
+def _order_by_nome() -> str:
+    """
+    SQLite aceita COLLATE NOCASE.
+    Para Postgres, usamos ORDER BY nome simples por enquanto.
+    """
+    return "nome" if DATABASE_URL else "nome COLLATE NOCASE"
+
 
 def _now_iso() -> str:
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 
 def username_exists(username: str) -> bool:
-    with get_conn() as conn:
-        row = conn.execute("SELECT 1 FROM users WHERE username = ? LIMIT 1", (username,)).fetchone()
+    conn = get_conn()
+    ph = _ph()
+
+    try:
+        cur = conn.cursor()
+        cur.execute(
+            f"SELECT 1 FROM users WHERE username = {ph} LIMIT 1",
+            (username,),
+        )
+        row = cur.fetchone()
         return bool(row)
+    finally:
+        conn.close()
 
 
 def make_unique_username(base: str) -> str:
     base = (base or "").strip().lower()
     if not base:
         return ""
+
     if not username_exists(base):
         return base
+
     i = 2
     while True:
         candidate = f"{base}{i}"
@@ -47,61 +65,113 @@ def make_unique_username(base: str) -> str:
 
 def create_user(display_name: str) -> Tuple[bool, str, str]:
     """
-    Cria usuário com first_login=1 e password_hash NULL (primeiro login cria senha).
+    Cria usuário com first_login=1 e password_hash NULL.
     Retorna (created, username, message)
     """
     display = normalize_display_name(display_name)
     base = generate_base_username(display)
+
     if not base:
         return (False, "", "Nome inválido (não foi possível gerar username).")
 
     username = make_unique_username(base)
+    ph = _ph()
+    conn = get_conn()
 
-    with get_conn() as conn:
-        existing = conn.execute("SELECT id FROM users WHERE username = ?", (username,)).fetchone()
+    try:
+        cur = conn.cursor()
+
+        cur.execute(
+            f"SELECT id FROM users WHERE username = {ph}",
+            (username,),
+        )
+        existing = cur.fetchone()
+
         if existing:
             return (False, username, "Username já existe.")
 
-        conn.execute(
-            """
+        cur.execute(
+            f"""
             INSERT INTO users (nome, username, password_hash, first_login, last_login)
-            VALUES (?, ?, NULL, 1, NULL)
+            VALUES ({ph}, {ph}, NULL, 1, NULL)
             """,
             (display, username),
         )
-    return (True, username, "Usuário criado.")
+        conn.commit()
+        return (True, username, "Usuário criado.")
+    finally:
+        conn.close()
 
 
 def list_users(limit: int = 500) -> List[Dict]:
-    with get_conn() as conn:
-        rows = conn.execute(
-            """
+    ph = _ph()
+    order_by = _order_by_nome()
+    conn = get_conn()
+
+    try:
+        cur = conn.cursor()
+        cur.execute(
+            f"""
             SELECT id, nome, username, first_login, last_login
             FROM users
-            ORDER BY nome COLLATE NOCASE
-            LIMIT ?
+            ORDER BY {order_by}
+            LIMIT {ph}
             """,
             (limit,),
-        ).fetchall()
-        return [dict(r) for r in rows]
+        )
+        rows = cur.fetchall()
+
+        result = []
+        for r in rows:
+            if isinstance(r, dict):
+                result.append(r)
+            else:
+                try:
+                    result.append(dict(r))
+                except Exception:
+                    result.append(
+                        {
+                            "id": r[0],
+                            "nome": r[1],
+                            "username": r[2],
+                            "first_login": r[3],
+                            "last_login": r[4],
+                        }
+                    )
+        return result
+    finally:
+        conn.close()
 
 
 def reset_password(username: str) -> None:
-    with get_conn() as conn:
-        conn.execute(
-            """
+    ph = _ph()
+    conn = get_conn()
+
+    try:
+        cur = conn.cursor()
+        cur.execute(
+            f"""
             UPDATE users
             SET password_hash = NULL, first_login = 1
-            WHERE username = ?
+            WHERE username = {ph}
             """,
             (username,),
         )
+        conn.commit()
+    finally:
+        conn.close()
 
 
 def delete_user(username: str) -> None:
-    # remove também dados vinculados
-    with get_conn() as conn:
-        conn.execute("DELETE FROM answers WHERE username = ?", (username,))
-        conn.execute("DELETE FROM app_access WHERE username = ?", (username,))
-        conn.execute("DELETE FROM stage_unlock WHERE username = ?", (username,))
-        conn.execute("DELETE FROM users WHERE username = ?", (username,))
+    ph = _ph()
+    conn = get_conn()
+
+    try:
+        cur = conn.cursor()
+        cur.execute(f"DELETE FROM answers WHERE username = {ph}", (username,))
+        cur.execute(f"DELETE FROM app_access WHERE username = {ph}", (username,))
+        cur.execute(f"DELETE FROM stage_unlock WHERE username = {ph}", (username,))
+        cur.execute(f"DELETE FROM users WHERE username = {ph}", (username,))
+        conn.commit()
+    finally:
+        conn.close()
