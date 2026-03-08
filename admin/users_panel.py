@@ -18,10 +18,21 @@ def users_panel():
     # ---------- Criar usuário manual ----------
     with st.expander("Criar usuário manualmente", expanded=False):
         nome = st.text_input("Nome completo (ex.: MAICON MARÇAL)", key="adm_create_nome")
+        senha_inicial = st.text_input(
+            "Senha inicial (opcional)",
+            type="password",
+            key="adm_create_password"
+        )
+
         if st.button("Criar usuário", key="adm_create_btn"):
-            ok, username, msg = create_user(nome)
+            senha = senha_inicial.strip() if senha_inicial else None
+            ok, username, msg = create_user(nome, senha)
+
             if ok:
-                st.success(f"{msg} username: {username}")
+                if senha:
+                    st.success(f"{msg} username: {username} | senha inicial definida.")
+                else:
+                    st.success(f"{msg} username: {username}")
                 st.rerun()
             else:
                 st.warning(f"{msg} (username sugerido: {username})")
@@ -38,7 +49,7 @@ def users_panel():
     st.divider()
 
     # ---------- Lista ----------
-    st.caption("Lista de usuários (reset de senha força criação de nova senha no próximo login).")
+    st.caption("Lista de usuários. Se o usuário estiver com first_login = SIM, ele precisará criar senha no próximo acesso.")
 
     all_users = list_users()
     query = st.text_input("Buscar (nome ou username)", key="adm_user_search").strip().lower()
@@ -64,16 +75,12 @@ def users_panel():
     )
 
     st.divider()
-   
-
-   # admin/users_panel.py  (trecho: Ações rápidas no padrão solicitado)
 
     st.write("Ações rápidas")
 
     # mensagens persistentes
-    st.session_state.setdefault("adm_msg_reset", None)   # ("success"|"warning"|"error", "texto")
-    st.session_state.setdefault("adm_msg_delete", None)  # ("success"|"warning"|"error", "texto")
-
+    st.session_state.setdefault("adm_msg_reset", None)
+    st.session_state.setdefault("adm_msg_delete", None)
 
     def _render_msg(msg):
         if not msg:
@@ -86,14 +93,13 @@ def users_panel():
         else:
             st.error(text)
 
-
     # =========================
     # RESETAR SENHA
-    # padrão: título -> (caixa+botão) -> mensagem
     # =========================
     st.markdown("### Resetar senha")
 
-    c_inp, c_btn = st.columns([4, 1.8])
+    c_inp, c_pass, c_btn = st.columns([3.2, 3.2, 1.8])
+
     with c_inp:
         target_reset = st.text_input(
             "reset_username",
@@ -102,23 +108,44 @@ def users_panel():
             placeholder="username (ex.: maiconmarcal)",
         ).strip().lower()
 
+    with c_pass:
+        new_password = st.text_input(
+            "Nova senha (opcional)",
+            key="adm_reset_new_password",
+            type="password",
+            label_visibility="collapsed",
+            placeholder="nova senha (deixe vazio para forçar primeiro acesso)",
+        )
+
     with c_btn:
         if st.button("Resetar senha", key="adm_reset_btn", use_container_width=True):
             if not target_reset:
                 st.session_state["adm_msg_reset"] = ("warning", "Informe um username.")
             else:
-                reset_password(target_reset)
-                st.session_state["adm_msg_reset"] = ("success", f"Senha resetada para {target_reset}.")
+                senha = new_password.strip() if new_password else None
+                reset_password(target_reset, senha)
+
+                if senha:
+                    st.session_state["adm_msg_reset"] = (
+                        "success",
+                        f"Senha redefinida para {target_reset} com senha inicial."
+                    )
+                else:
+                    st.session_state["adm_msg_reset"] = (
+                        "success",
+                        f"Senha resetada para {target_reset}. O usuário criará nova senha no próximo login."
+                    )
             st.rerun()
 
     _render_msg(st.session_state.get("adm_msg_reset"))
+
     # =========================
     # REMOVER USUÁRIO
-    # padrão: título -> (caixa+botão) -> confirmo -> mensagem
     # =========================
     st.markdown("### Remover usuário")
 
     c_inp, c_btn = st.columns([4, 1.8])
+
     with c_inp:
         target_del = st.text_input(
             "delete_username",
