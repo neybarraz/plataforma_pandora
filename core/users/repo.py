@@ -200,6 +200,7 @@ def delete_user(username: str) -> None:
         cur.execute(f"DELETE FROM answers WHERE username = {ph}", (username,))
         cur.execute(f"DELETE FROM app_access WHERE username = {ph}", (username,))
         cur.execute(f"DELETE FROM stage_unlock WHERE username = {ph}", (username,))
+        cur.execute(f"DELETE FROM app_user_data WHERE username = {ph}", (username,))
         cur.execute(f"DELETE FROM users WHERE username = {ph}", (username,))
         conn.commit()
     finally:
