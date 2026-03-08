@@ -9,10 +9,6 @@ DATABASE_URL = os.getenv("DATABASE_URL", "").strip()
 
 
 def _ph() -> str:
-    """
-    SQLite  -> ?
-    Postgres -> %s
-    """
     return "%s" if DATABASE_URL else "?"
 
 
@@ -35,9 +31,6 @@ def _row_value(row, key: str, index: int = 0):
 
 
 def _as_username(username) -> str:
-    """
-    Extrai o username sem alterar caixa.
-    """
     if username is None:
         return ""
 
@@ -53,9 +46,6 @@ def _as_username(username) -> str:
 
 
 def _normalized(value: str) -> str:
-    """
-    Normalização apenas para comparações lógicas.
-    """
     return (value or "").strip().lower()
 
 
@@ -146,9 +136,6 @@ def set_app_access(username: str, app_id: str, access: bool) -> None:
 
 
 def bulk_set_access_for_app(app_id: str, user_access_map: dict[str, bool]) -> None:
-    """
-    user_access_map: { "maiconmarcal": True, "anacosta": False, ... }
-    """
     if not user_access_map:
         return
 
