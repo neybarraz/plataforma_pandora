@@ -7,7 +7,7 @@ try:
 except Exception:
     pass
 
-from config import ADMIN_USERNAME
+from config import ADMIN_USERNAME, ADMIN_PASSWORD
 from core.db.init_db import ensure_db
 from core.permissions.app_access import user_has_access
 from ui.layouts.home_layout import render_home
@@ -43,13 +43,41 @@ def reset_to_home() -> None:
     st.rerun()
 
 
+def is_authenticated() -> bool:
+    return st.session_state.get("platform_authenticated", False)
+
+
+def render_login_gate() -> None:
+    st.set_page_config(page_title="Plataforma", layout="wide")
+
+    st.title("Acesso à Plataforma")
+    st.write("Informe seu usuário e senha para acessar a plataforma.")
+
+    username = st.text_input("Usuário")
+    password = st.text_input("Senha", type="password")
+
+    if st.button("Entrar", use_container_width=True):
+        if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
+            st.session_state["platform_authenticated"] = True
+            st.session_state["auth_user"] = username
+            st.session_state["current_view"] = "home"
+            st.rerun()
+        else:
+            st.error("Usuário ou senha inválidos.")
+
+
 def main() -> None:
     st.set_page_config(page_title="Plataforma", layout="wide")
 
     st.session_state.setdefault("current_view", "home")
     st.session_state.setdefault("current_app", None)
+    st.session_state.setdefault("platform_authenticated", False)
 
     view = st.session_state["current_view"]
+
+    if not is_authenticated():
+        render_login_gate()
+        return
 
     if view == "home":
         render_home()
