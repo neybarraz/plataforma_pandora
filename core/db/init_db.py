@@ -50,4 +50,5 @@ def ensure_db():
         conn.executescript(SCHEMA_SQL)
         conn.commit()
     finally:
+
         conn.close()
