@@ -1,6 +1,10 @@
 # core/permissions/stage_unlock.py
 
+import os
+
 from core.db.conn import get_conn
+
+DATABASE_URL = os.getenv("DATABASE_URL", "").strip()
 
 STAGES = [
     "visao_geral",
@@ -12,32 +16,64 @@ STAGES = [
 ]
 
 
+def _ph() -> str:
+    """
+    SQLite  -> ?
+    Postgres -> %s
+    """
+    return "%s" if DATABASE_URL else "?"
+
+
+def _row_value(row, key: str, index: int = 0):
+    if row is None:
+        return None
+
+    if isinstance(row, dict):
+        return row.get(key)
+
+    try:
+        return row[key]
+    except Exception:
+        pass
+
+    try:
+        return row[index]
+    except Exception:
+        return None
+
+
 def get_stage_unlocks_for_app(app_id: str) -> dict[str, set[str]]:
     """
-    Retorna um dict no formato:
+    Retorna:
         {
-            "username": {"visao_geral", "problema", "investigacao"},
+            "username": {"visao_geral", "problema", ...},
             ...
         }
 
     Traz somente etapas com unlocked = 1.
     """
+    ph = _ph()
     conn = get_conn()
+
     try:
-        rows = conn.execute(
-            """
+        cur = conn.cursor()
+        cur.execute(
+            f"""
             SELECT username, stage
             FROM stage_unlock
-            WHERE app_id = ? AND unlocked = 1
+            WHERE app_id = {ph} AND unlocked = 1
             """,
             (app_id,),
-        ).fetchall()
+        )
+        rows = cur.fetchall()
 
         out: dict[str, set[str]] = {}
         for row in rows:
-            username = row["username"]
-            stage = row["stage"]
-            out.setdefault(username, set()).add(stage)
+            username = _row_value(row, "username", 0)
+            stage = _row_value(row, "stage", 1)
+
+            if username and stage:
+                out.setdefault(username, set()).add(stage)
 
         return out
 
@@ -49,21 +85,20 @@ def bulk_set_stage_unlocks_for_app(app_id: str, unlock_map: dict[str, set[str]])
     """
     Salva o desbloqueio de etapas para um app.
 
-    Parâmetro:
-        unlock_map = {
-            "username_a": {"visao_geral", "problema"},
-            "username_b": {"visao_geral", "problema", "investigacao"},
-            ...
-        }
-
-    Observação:
-    O chamador deve garantir a consistência da cascata.
+    unlock_map = {
+        "username_a": {"visao_geral", "problema"},
+        "username_b": {"visao_geral", "problema", "investigacao"},
+    }
     """
     if not unlock_map:
         return
 
+    ph = _ph()
     conn = get_conn()
+
     try:
+        cur = conn.cursor()
+
         for username, unlocked_stages in unlock_map.items():
             if not isinstance(unlocked_stages, (set, list, tuple)):
                 unlocked_stages = set()
@@ -73,29 +108,30 @@ def bulk_set_stage_unlocks_for_app(app_id: str, unlock_map: dict[str, set[str]])
             for stage in STAGES:
                 allowed = 1 if stage in unlocked_stages else 0
 
-                exists = conn.execute(
-                    """
+                cur.execute(
+                    f"""
                     SELECT 1
                     FROM stage_unlock
-                    WHERE username = ? AND app_id = ? AND stage = ?
+                    WHERE username = {ph} AND app_id = {ph} AND stage = {ph}
                     """,
                     (username, app_id, stage),
-                ).fetchone()
+                )
+                exists = cur.fetchone()
 
                 if exists:
-                    conn.execute(
-                        """
+                    cur.execute(
+                        f"""
                         UPDATE stage_unlock
-                        SET unlocked = ?
-                        WHERE username = ? AND app_id = ? AND stage = ?
+                        SET unlocked = {ph}
+                        WHERE username = {ph} AND app_id = {ph} AND stage = {ph}
                         """,
                         (allowed, username, app_id, stage),
                     )
                 else:
-                    conn.execute(
-                        """
+                    cur.execute(
+                        f"""
                         INSERT INTO stage_unlock (username, app_id, stage, unlocked)
-                        VALUES (?, ?, ?, ?)
+                        VALUES ({ph}, {ph}, {ph}, {ph})
                         """,
                         (username, app_id, stage, allowed),
                     )
