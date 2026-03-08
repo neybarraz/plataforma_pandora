@@ -3,17 +3,64 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
+import os
 from typing import Any
 
 import pandas as pd
 import streamlit as st
 
 from config import ADMIN_USERNAME, APP_CATALOG
+from core.db.conn import get_conn
+
+DATABASE_URL = os.getenv("DATABASE_URL", "").strip()
 
 
-REPO_ROOT = Path(__file__).resolve().parents[1]
-APPS_DIR = REPO_ROOT / "apps"
+def _ph() -> str:
+    """
+    Retorna o placeholder correto para o banco atual.
+    SQLite  -> ?
+    Postgres -> %s
+    """
+    return "%s" if DATABASE_URL else "?"
+
+
+def _row_value(row: Any, key: str, index: int = 0) -> Any:
+    if row is None:
+        return None
+
+    if isinstance(row, dict):
+        return row.get(key)
+
+    try:
+        return row[key]
+    except Exception:
+        pass
+
+    try:
+        return row[index]
+    except Exception:
+        return None
+
+
+def _deserialize_payload(value: Any) -> dict[str, Any] | None:
+    if value is None:
+        return None
+
+    if isinstance(value, dict):
+        return value
+
+    if isinstance(value, str):
+        try:
+            data = json.loads(value)
+            return data if isinstance(data, dict) else None
+        except json.JSONDecodeError:
+            return None
+
+    try:
+        data = json.loads(value)
+        return data if isinstance(data, dict) else None
+    except Exception:
+        return None
 
 
 def _get_auth_username() -> str | None:
@@ -46,19 +93,8 @@ def _select_stats_app(app_id: str) -> None:
     st.session_state["stats_loaded_app"] = None
 
 
-def _get_responses_dir(app_id: str) -> Path:
-    return APPS_DIR / app_id / "data" / "responses"
-
-
-def _load_json_file(path: Path) -> dict[str, Any] | None:
-    try:
-        with path.open("r", encoding="utf-8") as f:
-            payload = json.load(f)
-        if isinstance(payload, dict):
-            return payload
-    except Exception:
-        return None
-    return None
+def _get_responses_dir_label(app_id: str) -> str:
+    return f"db/app_user_data/{app_id}"
 
 
 def _normalize_tipo(raw_tipo: Any) -> str:
@@ -93,25 +129,47 @@ def _is_correct_abcd(item: dict[str, Any]) -> bool:
     return resposta == correta
 
 
+def _load_payloads_for_app(app_id: str) -> list[dict[str, Any]]:
+    conn = get_conn()
+    ph = _ph()
+
+    try:
+        cur = conn.cursor()
+        cur.execute(
+            f"""
+            SELECT payload
+            FROM app_user_data
+            WHERE app_id = {ph}
+            """,
+            (app_id,),
+        )
+        rows = cur.fetchall()
+
+        payloads: list[dict[str, Any]] = []
+
+        for row in rows:
+            raw_payload = _row_value(row, "payload", 0)
+            payload = _deserialize_payload(raw_payload)
+
+            if isinstance(payload, dict):
+                payloads.append(payload)
+
+        return payloads
+
+    finally:
+        conn.close()
+
+
 def _collect_question_stats(app_id: str) -> tuple[int, pd.DataFrame]:
-    responses_dir = _get_responses_dir(app_id)
-
-    if not responses_dir.exists() or not responses_dir.is_dir():
-        return 0, pd.DataFrame(columns=["ID", "TIPO", "% RESPONDIDAS", "% ERRO"])
-
-    files = sorted(responses_dir.glob("*.json"))
-    total_files = len(files)
+    payloads = _load_payloads_for_app(app_id)
+    total_files = len(payloads)
 
     if total_files == 0:
         return 0, pd.DataFrame(columns=["ID", "TIPO", "% RESPONDIDAS", "% ERRO"])
 
     aggregated: dict[str, dict[str, Any]] = {}
 
-    for path in files:
-        payload = _load_json_file(path)
-        if not payload:
-            continue
-
+    for payload in payloads:
         responses = payload.get("responses", {})
         if not isinstance(responses, dict):
             continue
@@ -254,19 +312,19 @@ def statistics_panel() -> None:
         st.info("Clique em **Carregar estatísticas** para montar a tabela do app selecionado.")
         return
 
-    responses_dir = _get_responses_dir(app_id)
+    responses_label = _get_responses_dir_label(app_id)
     total_files = int(st.session_state.get("stats_total_files", 0))
     df = st.session_state.get("stats_table_df")
 
-    st.caption(f"Pasta analisada: `{responses_dir}`")
-    st.caption(f"Arquivos JSON analisados: {total_files}")
+    st.caption(f"Fonte analisada: `{responses_label}`")
+    st.caption(f"Registros analisados: {total_files}")
 
     if total_files == 0:
-        st.warning("Nenhum arquivo JSON encontrado para este app.")
+        st.warning("Nenhum registro encontrado para este app.")
         return
 
     if not isinstance(df, pd.DataFrame) or df.empty:
-        st.warning("Nenhuma questão estatística foi encontrada nos arquivos deste app.")
+        st.warning("Nenhuma questão estatística foi encontrada nos registros deste app.")
         return
 
     st.markdown("### Estatísticas por tipo de questão")
