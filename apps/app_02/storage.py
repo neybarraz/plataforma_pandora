@@ -1,27 +1,10 @@
 # apps/app_02/storage.py
-import json
-import os
-import time
-import uuid
+
 from copy import deepcopy
-from pathlib import Path
 from typing import Any, Dict
 
-from apps.app_02.config import APP_ID, RESPONSES_DIR, TABS
-
-
-def ensure_response_dir() -> None:
-    RESPONSES_DIR.mkdir(parents=True, exist_ok=True)
-
-
-def build_filename(username: str) -> str:
-    safe_username = str(username).strip().lower().replace(" ", "_")
-    return f"{safe_username}_{APP_ID}.json"
-
-
-def build_filepath(username: str) -> Path:
-    ensure_response_dir()
-    return RESPONSES_DIR / build_filename(username)
+from apps.app_02.config import APP_ID, TABS
+from core.app_data.repo import load_app_user_data, save_app_user_data
 
 
 def empty_payload(username: str) -> Dict[str, Any]:
@@ -31,60 +14,52 @@ def empty_payload(username: str) -> Dict[str, Any]:
         "responses": {tab["key"]: {} for tab in TABS},
         "meta": {
             "status": "em_andamento"
-        }
+        },
     }
 
 
-def load_user_data(username: str) -> Dict[str, Any]:
-    path = build_filepath(username)
-
-    if not path.exists():
-        data = empty_payload(username)
-        save_user_data(username, data)
-        return data
-
-    try:
-        with open(path, "r", encoding="utf-8") as f:
-            data = json.load(f)
-    except (json.JSONDecodeError, OSError):
-        data = empty_payload(username)
-        save_user_data(username, data)
-        return data
-
+def _normalize_payload(username: str, data: Dict[str, Any] | None) -> Dict[str, Any]:
     base = empty_payload(username)
+
+    if not isinstance(data, dict):
+        return base
+
     merged = deepcopy(base)
-    merged["meta"] = data.get("meta", base["meta"])
-    merged["responses"] = base["responses"] | data.get("responses", {})
+
+    meta = data.get("meta", {})
+    if isinstance(meta, dict):
+        merged["meta"] = meta
+
+    responses = data.get("responses", {})
+    if isinstance(responses, dict):
+        merged["responses"] = base["responses"] | responses
+
+    merged["app_id"] = APP_ID
+    merged["username"] = username
+
     return merged
 
 
+def load_user_data(username: str) -> Dict[str, Any]:
+    data = load_app_user_data(username=username, app_id=APP_ID)
+
+    if data is None:
+        data = empty_payload(username)
+        save_app_user_data(username=username, app_id=APP_ID, payload=data)
+        return data
+
+    normalized = _normalize_payload(username=username, data=data)
+
+    # garante que a estrutura mínima esteja consistente no banco
+    if normalized != data:
+        save_app_user_data(username=username, app_id=APP_ID, payload=normalized)
+
+    return normalized
+
+
 def save_user_data(username: str, data: Dict[str, Any]) -> None:
-    path = build_filepath(username)
-    ensure_response_dir()
-
-    tmp_path = path.with_suffix(f".{uuid.uuid4().hex}.tmp")
-
-    with open(tmp_path, "w", encoding="utf-8") as f:
-        json.dump(data, f, ensure_ascii=False, indent=2)
-        f.flush()
-        os.fsync(f.fileno())
-
-    last_error = None
-    for attempt in range(6):
-        try:
-            os.replace(tmp_path, path)
-            return
-        except PermissionError as exc:
-            last_error = exc
-            time.sleep(0.08 * (attempt + 1))
-
-    try:
-        if tmp_path.exists():
-            tmp_path.unlink(missing_ok=True)
-    except Exception:
-        pass
-
-    raise last_error
+    normalized = _normalize_payload(username=username, data=data)
+    save_app_user_data(username=username, app_id=APP_ID, payload=normalized)
 
 
 def update_answer(username: str, section: str, field_name: str, value: Any) -> Dict[str, Any]:
