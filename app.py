@@ -48,8 +48,6 @@ def is_authenticated() -> bool:
 
 
 def render_login_gate() -> None:
-    st.set_page_config(page_title="Plataforma", layout="wide")
-
     st.title("Acesso à Plataforma")
     st.write("Informe seu usuário e senha para acessar a plataforma.")
 
