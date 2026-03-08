@@ -36,6 +36,7 @@ def _init_state() -> None:
     st.session_state.setdefault("downloads_zip_bytes", None)
     st.session_state.setdefault("downloads_zip_name", None)
     st.session_state.setdefault("downloads_last_loaded_app", None)
+    st.session_state.setdefault("downloads_responses_dir_label", None)
 
 
 def _select_download_app(app_id: str) -> None:
@@ -44,6 +45,14 @@ def _select_download_app(app_id: str) -> None:
     st.session_state["downloads_zip_bytes"] = None
     st.session_state["downloads_zip_name"] = None
     st.session_state["downloads_last_loaded_app"] = None
+    st.session_state["downloads_responses_dir_label"] = None
+
+
+def _clear_checkbox_state_for_app(app_id: str) -> None:
+    prefix = f"downloads_select_{app_id}_"
+    keys_to_remove = [k for k in st.session_state.keys() if k.startswith(prefix)]
+    for key in keys_to_remove:
+        st.session_state.pop(key, None)
 
 
 def _load_files_for_app(app_id: str) -> None:
@@ -64,6 +73,8 @@ def _load_files_for_app(app_id: str) -> None:
 
     df = pd.DataFrame(rows)
 
+    _clear_checkbox_state_for_app(app_id)
+
     st.session_state["downloads_table_df"] = df
     st.session_state["downloads_last_loaded_app"] = app_id
     st.session_state["downloads_zip_bytes"] = None
@@ -81,7 +92,7 @@ def downloads_panel() -> None:
     _init_state()
 
     st.subheader("Downloads")
-    st.caption("1) Clique em um app. 2) Carregue os arquivos. 3) Selecione. 4) Baixe o ZIP.")
+    st.caption("1) Clique em um app. 2) Carregue os registros. 3) Selecione. 4) Baixe o ZIP.")
 
     if not APP_CATALOG:
         st.warning("APP_CATALOG está vazio no config.py.")
@@ -116,7 +127,7 @@ def downloads_panel() -> None:
     # ---------- APP SELECIONADO ----------
     app_id = st.session_state.get("downloads_selected_app")
     if not app_id:
-        st.info("Clique em um app acima para listar os arquivos disponíveis.")
+        st.info("Clique em um app acima para listar os registros disponíveis.")
         return
 
     st.markdown(f"### App selecionado: `{app_id}`")
@@ -134,21 +145,23 @@ def downloads_panel() -> None:
             if isinstance(df, pd.DataFrame) and not df.empty:
                 df["Selecionar"] = False
                 st.session_state["downloads_table_df"] = df
+
+            _clear_checkbox_state_for_app(app_id)
             st.session_state["downloads_zip_bytes"] = None
             st.session_state["downloads_zip_name"] = None
             st.rerun()
 
     if st.session_state.get("downloads_last_loaded_app") != app_id:
-        st.info("Clique em **Carregar arquivos** para listar os JSONs do app selecionado.")
+        st.info("Clique em **Carregar arquivos** para listar os registros do app selecionado.")
         return
 
-    responses_dir = get_responses_dir(app_id)
-    st.caption(f"Pasta de respostas: `{responses_dir}`")
+    responses_dir = st.session_state.get("downloads_responses_dir_label") or str(get_responses_dir(app_id))
+    st.caption(f"Fonte de dados: `{responses_dir}`")
 
     df = st.session_state.get("downloads_table_df")
 
     if not isinstance(df, pd.DataFrame) or df.empty:
-        st.warning("Nenhum arquivo JSON encontrado para este app.")
+        st.warning("Nenhum registro encontrado para este app.")
         return
 
     st.markdown("### Arquivos disponíveis")
