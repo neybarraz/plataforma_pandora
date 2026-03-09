@@ -49,7 +49,7 @@ def _card_css():
         :root{
             --CARD_H: 250px;     /* altura do card */
             --TXT_H:   84px;     /* altura do overlay do texto */
-            --HOVER_Z: 1.1;     /* zoom no hover */
+            --HOVER_Z: 1.04;     /* zoom no hover */
             --BTN_GAP: -14px;    /* espaço entre card e botão (use -6, -10, -14...) */
         }
 
@@ -274,4 +274,5 @@ def render_home():
                         help=description,
                         use_container_width=True,
                         disabled=True,
+
                     )
