@@ -1,0 +1,14 @@
+[
+  {
+    "id": "autoavaliacao",
+    "label": "Autoavaliação",
+    "type": "textarea",
+    "default": ""
+  },
+  {
+    "id": "nota_percebida",
+    "label": "Nota percebida",
+    "type": "number",
+    "default": 0
+  }
+]

@@ -1,0 +1,15 @@
+[
+  {
+    "id": "proposta",
+    "label": "Proposta de solução",
+    "type": "textarea",
+    "default": ""
+  },
+  {
+    "id": "viabilidade",
+    "label": "Nível de viabilidade",
+    "type": "select",
+    "options": ["Baixa", "Média", "Alta"],
+    "default": "Média"
+  }
+]
