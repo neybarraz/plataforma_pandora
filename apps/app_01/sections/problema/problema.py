@@ -11,7 +11,6 @@ import streamlit as st
 
 from apps.app_01.sections.problema.conteudos.catalogo import get_paginas
 from apps.app_01.storage import (
-    get_problem_stats,
     load_user_data,
     update_question_payload,
 )
@@ -222,6 +221,12 @@ def _ensure_state(username: str) -> None:
     if "problema_conteudo_idx_por_pagina" not in st.session_state:
         st.session_state.problema_conteudo_idx_por_pagina = {}
 
+    if "problema_total_questoes" not in st.session_state:
+        st.session_state.problema_total_questoes = 0
+
+    if "problema_respondidas" not in st.session_state:
+        st.session_state.problema_respondidas = 0
+
     data = load_user_data(username)
     st.session_state.problema_data_cache = data
 
@@ -260,6 +265,96 @@ def _mark_dirty() -> None:
 
 def _get_widget_value(questao_id: str, default: Any = "") -> Any:
     return st.session_state.get(f"widget_{questao_id}", default)
+
+
+# -----------------------------
+# CONTAGEM DE QUESTÕES
+# -----------------------------
+
+def _is_catalog_question_block(bloco: dict[str, Any]) -> bool:
+    if not isinstance(bloco, dict):
+        return False
+
+    bloco_id = str(bloco.get("id", "")).strip()
+    bloco_tipo = str(bloco.get("tipo", "")).strip()
+
+    return (
+        bloco_id.startswith("q_")
+        and bloco_tipo in {"questao_texto", "questao_multipla_escolha"}
+    )
+
+
+def _iter_catalog_question_blocks(paginas: list[dict[str, Any]]):
+    for pagina in paginas:
+        for conteudo in pagina.get("conteudos", []):
+            for bloco in conteudo.get("blocos", []):
+                if _is_catalog_question_block(bloco):
+                    yield bloco
+
+
+def _count_total_questions_from_catalog(paginas: list[dict[str, Any]]) -> int:
+    ids = {
+        str(bloco["id"]).strip()
+        for bloco in _iter_catalog_question_blocks(paginas)
+    }
+    return len(ids)
+
+
+def _is_answered_payload(payload: Any) -> bool:
+    if not isinstance(payload, dict):
+        return False
+
+    tipo = str(payload.get("tipo", "")).strip()
+
+    if tipo == "texto":
+        return bool(str(payload.get("resposta", "")).strip())
+
+    if tipo == "multipla_escolha":
+        return bool(str(payload.get("resposta_escolhida", "")).strip())
+
+    return False
+
+
+def _count_answered_questions(username: str, paginas: list[dict[str, Any]]) -> int:
+    data = st.session_state.get("problema_data_cache")
+    if not isinstance(data, dict):
+        data = load_user_data(username)
+        st.session_state.problema_data_cache = data
+
+    problema_answers = _extract_problema_answers(data)
+
+    valid_ids = {
+        str(bloco["id"]).strip()
+        for bloco in _iter_catalog_question_blocks(paginas)
+    }
+
+    respondidas = 0
+
+    for qid in valid_ids:
+        widget_key = f"widget_{qid}"
+
+        # Prioriza o que está atualmente no widget, mesmo antes de salvar.
+        if widget_key in st.session_state:
+            valor_widget = st.session_state.get(widget_key)
+
+            if isinstance(valor_widget, str):
+                if valor_widget.strip():
+                    respondidas += 1
+                    continue
+            elif valor_widget is not None:
+                respondidas += 1
+                continue
+
+        payload = problema_answers.get(qid)
+        if _is_answered_payload(payload):
+            respondidas += 1
+
+    return respondidas
+
+
+def _refresh_question_counters(username: str, paginas: list[dict[str, Any]]) -> None:
+    st.session_state.problema_total_questoes = _count_total_questions_from_catalog(paginas)
+    st.session_state.problema_respondidas = _count_answered_questions(username, paginas)
 
 
 # -----------------------------
@@ -310,7 +405,7 @@ def _question_blocks_from_conteudo(conteudo: dict[str, Any]) -> list[dict[str, A
     ]
 
 
-def _save_conteudo_if_dirty(username: str, conteudo: dict[str, Any]) -> None:
+def _save_conteudo_if_dirty(username: str, conteudo: dict[str, Any], paginas: list[dict[str, Any]] | None = None) -> None:
     if not st.session_state.get("problema_dirty", False):
         return
 
@@ -327,14 +422,17 @@ def _save_conteudo_if_dirty(username: str, conteudo: dict[str, Any]) -> None:
     )
     st.session_state.problema_data_cache = load_user_data(username)
 
+    if paginas is not None:
+        _refresh_question_counters(username, paginas)
+
 
 # -----------------------------
 # AUTOSAVE
 # -----------------------------
 
 @st.fragment(run_every=f"{AUTOSAVE_INTERVAL_S}s")
-def _autosave_fragment(username: str, conteudo: dict[str, Any]) -> None:
-    _save_conteudo_if_dirty(username, conteudo)
+def _autosave_fragment(username: str, conteudo: dict[str, Any], paginas: list[dict[str, Any]]) -> None:
+    _save_conteudo_if_dirty(username, conteudo, paginas)
 
 
 # -----------------------------
@@ -418,10 +516,11 @@ def _render_conteudo(conteudo: dict[str, Any]) -> None:
         st.markdown("<div style='margin-bottom:0.8rem;'></div>", unsafe_allow_html=True)
 
 
-def _barra_resumo(username: str) -> None:
-    stats = get_problem_stats(username)
-    total = stats.get("total_questoes", 0)
-    respondidas = stats.get("respondidas", 0)
+def _barra_resumo(username: str, paginas: list[dict[str, Any]]) -> None:
+    _refresh_question_counters(username, paginas)
+
+    total = st.session_state.get("problema_total_questoes", 0)
+    respondidas = st.session_state.get("problema_respondidas", 0)
     progresso = 0.0 if total == 0 else respondidas / total
 
     st.progress(progresso)
@@ -465,6 +564,9 @@ def render(
         st.info("Nenhuma página foi configurada para a etapa Problema.")
         return
 
+    # Conta total e respondidas assim que entra no menu do problema.
+    _refresh_question_counters(username, paginas)
+
     pagina_idx = st.session_state.get("problema_pagina_idx", 0)
     pagina_idx = max(0, min(pagina_idx, len(paginas) - 1))
     st.session_state.problema_pagina_idx = pagina_idx
@@ -485,9 +587,9 @@ def render(
     conteudo_atual = conteudos_da_pagina[conteudo_idx]
 
     _hydrate_widgets_from_file(username, conteudo_atual, overwrite=False)
-    _autosave_fragment(username, conteudo_atual)
+    _autosave_fragment(username, conteudo_atual, paginas)
 
-    _barra_resumo(username)
+    _barra_resumo(username, paginas)
     st.markdown("---")
 
     _barra_paginas(pagina_idx, len(paginas))
@@ -497,7 +599,7 @@ def render(
     with nav1:
         if pagina_idx > 0:
             if st.button("⬅ Página anterior", key="problema_pagina_anterior", use_container_width=True):
-                _save_conteudo_if_dirty(username, conteudo_atual)
+                _save_conteudo_if_dirty(username, conteudo_atual, paginas)
                 st.session_state.problema_pagina_idx = pagina_idx - 1
                 nova_pagina = paginas[pagina_idx - 1]
                 novo_idx = _get_conteudo_idx_da_pagina(
@@ -520,7 +622,7 @@ def render(
     with nav3:
         if pagina_idx < len(paginas) - 1:
             if st.button("Próxima página ➜", key="problema_proxima_pagina", use_container_width=True):
-                _save_conteudo_if_dirty(username, conteudo_atual)
+                _save_conteudo_if_dirty(username, conteudo_atual, paginas)
                 st.session_state.problema_pagina_idx = pagina_idx + 1
                 nova_pagina = paginas[pagina_idx + 1]
                 novo_idx = _get_conteudo_idx_da_pagina(
@@ -537,6 +639,10 @@ def render(
     with col_menu:
         _menu_conteudos_style()
         st.markdown(f"**{pagina_atual.get('titulo_menu', 'Conteúdos')}**")
+        st.caption(
+            f"Respondidas: {st.session_state.get('problema_respondidas', 0)}/"
+            f"{st.session_state.get('problema_total_questoes', 0)}"
+        )
 
         for i, item in enumerate(conteudos_da_pagina):
             label = item.get("titulo_menu", item.get("titulo", item["id"]))
@@ -547,7 +653,7 @@ def render(
                 use_container_width=True,
                 type="primary" if i == conteudo_idx else "secondary",
             ):
-                _save_conteudo_if_dirty(username, conteudo_atual)
+                _save_conteudo_if_dirty(username, conteudo_atual, paginas)
                 _set_conteudo_idx_da_pagina(pagina_atual["id"], i)
                 _hydrate_widgets_from_file(username, conteudos_da_pagina[i], overwrite=True)
                 st.rerun()
