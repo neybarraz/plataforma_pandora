@@ -8,7 +8,6 @@ from typing import Any
 
 import streamlit as st
 
-
 from apps.app_02.sections.problema.conteudos.catalogo import get_paginas
 from apps.app_02.storage import (
     load_user_data,
@@ -546,9 +545,7 @@ def _render_bloco(
         return
 
     if tipo == "video":
-        st.video(bloco["url"])
-        if bloco.get("caption"):
-            st.caption(bloco["caption"])
+        st.info("Vídeo temporariamente desabilitado para teste.")
         return
 
     if tipo == "imagem":
@@ -760,17 +757,6 @@ def render(
             ):
                 _save_pending_questions(username, conteudo_atual, paginas)
                 st.session_state.problema_pagina_idx = pagina_idx - 1
-                nova_pagina = paginas[pagina_idx - 1]
-                novo_idx = _get_conteudo_idx_da_pagina(
-                    nova_pagina["id"],
-                    len(nova_pagina["conteudos"]),
-                )
-                _hydrate_widgets_from_file(
-                    username,
-                    nova_pagina["conteudos"][novo_idx],
-                    overwrite=True,
-                )
-                st.rerun()
 
     with nav2:
         st.markdown(
@@ -791,17 +777,6 @@ def render(
             ):
                 _save_pending_questions(username, conteudo_atual, paginas)
                 st.session_state.problema_pagina_idx = pagina_idx + 1
-                nova_pagina = paginas[pagina_idx + 1]
-                novo_idx = _get_conteudo_idx_da_pagina(
-                    nova_pagina["id"],
-                    len(nova_pagina["conteudos"]),
-                )
-                _hydrate_widgets_from_file(
-                    username,
-                    nova_pagina["conteudos"][novo_idx],
-                    overwrite=True,
-                )
-                st.rerun()
 
     st.markdown("---")
 
@@ -823,12 +798,6 @@ def render(
             ):
                 _save_pending_questions(username, conteudo_atual, paginas)
                 _set_conteudo_idx_da_pagina(pagina_atual["id"], i)
-                _hydrate_widgets_from_file(
-                    username,
-                    conteudos_da_pagina[i],
-                    overwrite=True,
-                )
-                st.rerun()
 
     with col_main:
         _flash_style(st.session_state.get("problema_saved_ids", set()))
