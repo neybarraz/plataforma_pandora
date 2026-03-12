@@ -1,4 +1,3 @@
-# simulador_conversor_didatico.py
 from __future__ import annotations
 
 import math
@@ -29,7 +28,6 @@ def _calc_waveforms(
     L = L_uh * 1e-6
     C = C_uf * 1e-6
 
-    # Modelo didático da saída
     vout_ideal = vin / max(1e-6, (1.0 - duty))
     vout_target = 1.5 + duty * (35.0 - 1.5)
 
@@ -49,7 +47,6 @@ def _calc_waveforms(
     delta_v *= 0.08
 
     for idx, tt in enumerate(t):
-
         tau = (tt % period) / period
 
         if tau < duty:
@@ -89,11 +86,9 @@ def _plot_signal(
     xlim: tuple | None = None,
     ylim: tuple | None = None,
 ):
-
     fig, ax = plt.subplots(figsize=(8, 3.2))
 
     ax.plot(x, y)
-
     ax.set_title(title)
     ax.set_xlabel(xlabel)
     ax.set_ylabel(ylabel)
@@ -111,51 +106,91 @@ def _plot_signal(
 
 
 def _draw_converter_diagram(vin: float, vout: float, duty: float):
+    st.markdown("#### Esquema didático do conversor")
 
-    st.markdown("### Esquema didático do conversor")
+    st.markdown(
+        """
+        <style>
+        .conv-box{
+            border:1px solid #888;
+            border-radius:10px;
+            padding:12px;
+            height:90px;
 
-    col1, col2, col3, col4, col5 = st.columns([1.4, 0.8, 1.1, 0.8, 1.2])
+            display:flex;
+            flex-direction:column;
+            justify-content:center;
+            align-items:center;
 
-    with col1:
-        st.metric("Entrada (bateria)", f"{vin:.2f} V")
+            gap:0;
+        }
 
-    with col2:
-        st.markdown(
-            """
-            <div style="text-align:center;font-size:1.8rem;padding-top:1.2rem;">
-            ➜
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
+        /* remove margens padrão */
+        .conv-box p,
+        .conv-box div,
+        .conv-box strong{
+            margin:0;
+            line-height:0;
+            margin-bottom:-10px;
+        }
 
-    with col3:
+        .conv-arrow{
+            text-align:center;
+            font-size:1.8rem;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            height:90px;              /* mesma altura das caixas */
+        }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    # 3 blocos principais com larguras equivalentes e setas em colunas estreitas
+    c1, c2, c3, c4, c5 = st.columns([3, 0.7, 3, 0.7, 3], vertical_alignment="center")
+
+    with c1:
         st.markdown(
             f"""
-            <div style="border:1px solid #888;border-radius:10px;padding:12px;text-align:center;">
-            <strong>Conversor</strong><br>
-            Duty cycle: {duty:.2f} ({duty*100:.0f}%)
+            <div class="conv-box">
+                <strong>Entrada (bateria)</strong><br>
+                {vin:.2f} V
             </div>
             """,
             unsafe_allow_html=True,
         )
 
-    with col4:
+    with c2:
+        st.markdown('<div class="conv-arrow">➜</div>', unsafe_allow_html=True)
+
+    with c3:
         st.markdown(
-            """
-            <div style="text-align:center;font-size:1.8rem;padding-top:1.2rem;">
-            ➜
+            f"""
+            <div class="conv-box">
+                <strong>Conversor</strong><br>
+                Duty cycle: {duty:.2f} ({duty*100:.0f}%)
             </div>
             """,
             unsafe_allow_html=True,
         )
 
-    with col5:
-        st.metric("Saída (carga)", f"{vout:.2f} V")
+    with c4:
+        st.markdown('<div class="conv-arrow">➜</div>', unsafe_allow_html=True)
+
+    with c5:
+        st.markdown(
+            f"""
+            <div class="conv-box">
+                <strong>Saída (carga)</strong><br>
+                {vout:.2f} V
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
 
 
 def render_simulador_conversor_didatico() -> None:
-
     st.subheader("Simulador didático do conversor")
 
     st.markdown(
@@ -171,26 +206,30 @@ Observe a relação entre:
 """
     )
 
-    st.markdown("### Parâmetros do simulador")
+    st.markdown("#### Parâmetros do simulador")
 
-    col_a, col_b = st.columns(2)
+    # 2 linhas x 3 colunas
+    row1 = st.columns(3)
+    row2 = st.columns(3)
 
-    with col_a:
+    with row1[0]:
         vin = st.slider("Tensão da bateria (V)", 3.0, 4.2, 3.7, 0.1)
-        duty = st.slider("Duty cycle", 0.00, 1.00, 0.35, 0.01)
-        freq_khz = st.slider("Frequência de chaveamento (kHz)", 20, 180, 52, 1)
 
-    with col_b:
+    with row1[1]:
+        duty = st.slider("Duty cycle", 0.00, 1.00, 0.35, 0.01)
+
+    with row1[2]:
+        freq_khz = st.slider("Frequência (kHz)", 20, 180, 52, 1)
+
+    with row2[0]:
         L_uh = st.slider("Indutância (µH)", 10, 220, 47, 1)
+
+    with row2[1]:
         C_uf = st.slider("Capacitância (µF)", 10, 470, 220, 5)
+
+    with row2[2]:
         load_ohm = st.slider("Carga equivalente (Ω)", 5, 100, 22, 1)
 
-    st.info(
-        """
-**O que é duty cycle?**
-É a fração do tempo em que a chave eletrônica permanece ligada durante cada ciclo de operação.
-"""
-    )
 
     data = _calc_waveforms(
         vin,
@@ -207,23 +246,24 @@ Observe a relação entre:
         duty,
     )
 
-    st.markdown("### Leituras principais")
+    st.markdown("#### Leituras principais")
 
-    metricas = [
-        ("Tensão de saída", f"{data['vout_target']:.2f} V"),
-        ("Corrente média na carga", f"{data['i_load']:.2f} A"),
-        ("Ripple de corrente no indutor", f"{data['delta_i']:.3f} A"),
-        ("Ripple da tensão", f"{data['delta_v']:.3f} V"),
-    ]
+    # 1 linha com 4 colunas
+    m1, m2, m3, m4 = st.columns(4)
 
-    for i in range(0, len(metricas), 2):
-        col1, col2 = st.columns(2)
-        col1.metric(*metricas[i])
+    with m1:
+        st.metric("Vout", f"{data['vout_target']:.2f} V")
 
-        if i + 1 < len(metricas):
-            col2.metric(*metricas[i + 1])
+    with m2:
+        st.metric("I carga", f"{data['i_load']:.2f} A")
 
-    st.markdown("### Visualização dos processos físicos")
+    with m3:
+        st.metric("Ripple iL", f"{data['delta_i']:.3f} A")
+
+    with m4:
+        st.metric("Ripple V", f"{data['delta_v']:.3f} V")
+
+    st.markdown("#### Visualização dos processos físicos")
 
     x_limits = (data["t_ms"][0], data["t_ms"][-1])
 
@@ -292,9 +332,14 @@ Observe a relação entre:
             "Interpretação: a tensão de saída apresenta pequena ondulação devido ao chaveamento do conversor."
         )
 
+    st.info(
+        """
+**O que é duty cycle?**
+É a fração do tempo em que a chave eletrônica permanece ligada durante cada ciclo de operação.
+"""
+    )
 
 if __name__ == "__main__":
-
     st.set_page_config(
         page_title="Simulador didático do conversor",
         layout="wide",
