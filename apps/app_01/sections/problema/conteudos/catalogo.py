@@ -14,7 +14,6 @@ from apps.app_01.sections.problema.conteudos import (
     conteudo_4_01,
     conteudo_4_02,
     conteudo_4_03,
-    conteudo_5_01,
 )
 
 
@@ -114,17 +113,7 @@ def get_paginas():
             ],
         },
 
-        {
-            "id": "pagina_5",
-            "titulo_menu": "Validação do Problema",
-            "conteudos": [
-                {
-                    "id": "conteudo_5_01",
-                    "titulo_menu": "Validação do modelo",
-                    "blocos": conteudo_5_01.get_blocos(),
-                },
-            ],
-        },
+        
 
     ]
 
@@ -133,4 +122,5 @@ def get_conteudos():
     conteudos = []
     for pagina in get_paginas():
         conteudos.extend(pagina["conteudos"])
+
     return conteudos
