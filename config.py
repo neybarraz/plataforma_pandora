@@ -38,9 +38,10 @@ APP_CATALOG = [
     },
     {
         "app_id": "app_05",
-        "title": "Análise Energética de um Sistema Embarcado",
+        "title": "Como Funciona o Backup de Energia em Circuitos Eletrônicos?",
         "subtitle": "Eletricidade e Eletrônica Aplicadas",
         "card_image": "el001.png",
         "description": "Explore como sensores, eletrônica e sistemas de energia trabalham juntos para medir temperatura, umidade e iluminação em tempo real. Descubra como um dispositivo baseado em ESP32 transforma fenômenos físicos em dados que revelam o funcionamento do ambiente."
     }
+
 ]
