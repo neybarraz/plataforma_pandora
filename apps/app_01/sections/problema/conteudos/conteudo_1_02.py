@@ -30,7 +30,7 @@ def get_blocos() -> list[dict]:
         },
         {
             "tipo": "questao_multipla_escolha",
-            "id": "q_003",
+            "id": "q_002",
             "pergunta": (
                 "Do ponto de vista físico, quando se pode afirmar que existe conforto térmico "
                 "em um ambiente interno?"
@@ -63,7 +63,7 @@ def get_blocos() -> list[dict]:
         },
         {
             "tipo": "questao_texto",
-            "id": "q_004",
+            "id": "q_003",
             "pergunta": (
                 "Explique, com suas palavras, por que o conforto térmico não depende apenas da "
                 "temperatura do ar, mas também da temperatura das superfícies do ambiente e dos "
