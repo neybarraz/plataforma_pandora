@@ -41,7 +41,7 @@ def get_blocos() -> list[dict]:
 
         {
             "tipo": "questao_multipla_escolha",
-            "id": "q_030",
+            "id": "q_019",
             "pergunta": (
                 "O que caracteriza o processo de condução térmica em uma parede?"
             ),
@@ -74,7 +74,7 @@ def get_blocos() -> list[dict]:
 
         {
             "tipo": "questao_multipla_escolha",
-            "id": "q_031",
+            "id": "q_020",
             "pergunta": (
                 "Em qual situação ocorre convecção térmica entre uma parede e o ar da sala?"
             ),
@@ -106,7 +106,7 @@ def get_blocos() -> list[dict]:
 
         {
             "tipo": "questao_multipla_escolha",
-            "id": "q_032",
+            "id": "q_021",
             "pergunta": (
                 "Qual característica distingue a transferência de calor por radiação?"
             ),
@@ -137,21 +137,6 @@ def get_blocos() -> list[dict]:
         },
 
         {
-            "tipo": "questao_multipla_escolha",
-            "id": "q_033",
-            "pergunta": (
-                "Qual é o principal efeito da movimentação do ar no interior da sala?"
-            ),
-            "alternativas": {
-                "a": "Eliminar completamente as trocas de calor",
-                "b": "Transportar e redistribuir energia térmica no ambiente",
-                "c": "Impedir a radiação térmica entre superfícies",
-                "d": "Alterar apenas a iluminação da sala",
-            },
-            "alternativa_correta": "b",
-        },
-
-        {
             "tipo": "texto",
             "texto": (
                 "Os processos físicos descritos — condução, convecção, radiação e mistura "
@@ -163,7 +148,7 @@ def get_blocos() -> list[dict]:
 
         {
             "tipo": "questao_multipla_escolha",
-            "id": "q_034",
+            "id": "q_022",
             "pergunta": (
                 "Quais processos físicos explicam a transferência de calor no ambiente analisado?"
             ),
@@ -178,7 +163,7 @@ def get_blocos() -> list[dict]:
 
         {
             "tipo": "questao_texto",
-            "id": "q_035",
+            "id": "q_023",
             "pergunta": (
                 "Explique, com suas palavras, como os processos de condução, convecção, "
                 "radiação e movimentação do ar atuam juntos para determinar o comportamento "

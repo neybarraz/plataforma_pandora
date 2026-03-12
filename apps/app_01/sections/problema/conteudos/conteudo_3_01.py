@@ -41,7 +41,7 @@ def get_blocos() -> list[dict]:
         },
         {
             "tipo": "questao_multipla_escolha",
-            "id": "q_022",
+            "id": "q_014",
             "pergunta": (
                 "Qual é a função da pergunta norteadora em um estudo baseado em investigação?"
             ),
@@ -62,16 +62,5 @@ def get_blocos() -> list[dict]:
                 "estudo, a pergunta conecta as medições de temperatura do ar e das superfícies "
                 "com a análise do conforto térmico no ambiente."
             ),
-        },
-        {
-            "tipo": "questao_texto",
-            "id": "q_023",
-            "pergunta": (
-                "Explique, com suas palavras, como a análise da temperatura do ar e das "
-                "superfícies pode ajudar a responder à pergunta norteadora sobre o conforto "
-                "térmico da sala."
-            ),
-            "placeholder": "Digite sua resposta aqui...",
-            "altura": 180,
         },
     ]

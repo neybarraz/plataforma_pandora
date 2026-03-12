@@ -41,7 +41,7 @@ def get_blocos() -> list[dict]:
 
         {
             "tipo": "questao_multipla_escolha",
-            "id": "q_015",
+            "id": "q_010",
             "pergunta": (
                 "Por que é importante medir a temperatura do ar em diferentes pontos da sala?"
             ),
@@ -73,7 +73,7 @@ def get_blocos() -> list[dict]:
 
         {
             "tipo": "questao_multipla_escolha",
-            "id": "q_016",
+            "id": "q_011",
             "pergunta": (
                 "O que indica a existência de um gradiente térmico em uma sala?"
             ),
@@ -105,21 +105,6 @@ def get_blocos() -> list[dict]:
         },
 
         {
-            "tipo": "questao_multipla_escolha",
-            "id": "q_017",
-            "pergunta": (
-                "O que pode ocorrer quando a temperatura de uma parede é maior que a temperatura do ar próximo a ela?"
-            ),
-            "alternativas": {
-                "a": "A parede tende a transferir calor para o ar",
-                "b": "O ar transfere calor para a parede",
-                "c": "Não ocorre nenhuma troca de calor",
-                "d": "A temperatura do ar passa a ser igual à externa",
-            },
-            "alternativa_correta": "a",
-        },
-
-        {
             "tipo": "titulo",
             "texto": "Campo térmico e conforto térmico",
         },
@@ -139,7 +124,7 @@ def get_blocos() -> list[dict]:
 
         {
             "tipo": "questao_multipla_escolha",
-            "id": "q_018",
+            "id": "q_012",
             "pergunta": (
                 "Como o campo térmico de um ambiente pode influenciar o conforto térmico?"
             ),
@@ -150,17 +135,5 @@ def get_blocos() -> list[dict]:
                 "d": "O conforto depende apenas da ventilação",
             },
             "alternativa_correta": "a",
-        },
-
-        {
-            "tipo": "questao_texto",
-            "id": "q_019",
-            "pergunta": (
-                "Explique, com suas palavras, como a distribuição da temperatura do ar e "
-                "a diferença entre temperaturas do ar e das superfícies podem influenciar "
-                "o conforto térmico em uma sala."
-            ),
-            "placeholder": "Digite sua resposta aqui...",
-            "altura": 180,
         },
     ]

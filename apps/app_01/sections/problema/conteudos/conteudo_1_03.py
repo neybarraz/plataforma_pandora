@@ -42,20 +42,6 @@ def get_blocos() -> list[dict]:
             "caption": "Introdução à análise de conforto térmico em ambientes internos.",
         },
         {
-            "tipo": "questao_multipla_escolha",
-            "id": "q_005",
-            "pergunta": (
-                "Qual é o objetivo principal da análise de conforto térmico proposta para a sala?"
-            ),
-            "alternativas": {
-                "a": "Determinar apenas a temperatura média do ambiente, sem considerar sua distribuição espacial",
-                "b": "Investigar como a distribuição de temperatura no ambiente influencia o conforto térmico dos ocupantes",
-                "c": "Medir exclusivamente a temperatura externa para estimar o desempenho térmico da sala",
-                "d": "Avaliar somente os materiais das paredes, sem relacioná-los ao comportamento térmico do ambiente",
-            },
-            "alternativa_correta": "b",
-        },
-        {
             "tipo": "texto",
             "texto": (
                 "A análise do conforto térmico exige observar o ambiente de forma espacial. "
@@ -70,7 +56,7 @@ def get_blocos() -> list[dict]:
         },
         {
             "tipo": "questao_texto",
-            "id": "q_006",
+            "id": "q_004",
             "pergunta": (
                 "Explique, com suas palavras, por que a análise do conforto térmico não deve "
                 "considerar apenas a temperatura média da sala, mas também a relação entre "

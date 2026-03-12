@@ -50,21 +50,6 @@ def get_blocos() -> list[dict]:
         },
 
         {
-            "tipo": "questao_multipla_escolha",
-            "id": "q_020",
-            "pergunta": (
-                "Por que é importante delimitar o escopo da análise térmica da sala?"
-            ),
-            "alternativas": {
-                "a": "Para considerar todos os fenômenos físicos possíveis sem restrições",
-                "b": "Para limitar o estudo aos aspectos mais relevantes do problema analisado",
-                "c": "Para eliminar completamente as trocas de calor do ambiente",
-                "d": "Para substituir as medições experimentais por estimativas teóricas",
-            },
-            "alternativa_correta": "b",
-        },
-
-        {
             "tipo": "texto",
             "texto": (
                 "A delimitação do escopo permite transformar um fenômeno complexo em um problema "
@@ -77,7 +62,7 @@ def get_blocos() -> list[dict]:
 
         {
             "tipo": "questao_texto",
-            "id": "q_021",
+            "id": "q_013",
             "pergunta": (
                 "Explique, com suas palavras, por que a análise térmica deste estudo foi "
                 "delimitada considerando apenas duas dimensões da sala e apenas as "

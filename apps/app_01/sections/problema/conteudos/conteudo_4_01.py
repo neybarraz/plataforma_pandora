@@ -39,7 +39,7 @@ def get_blocos() -> list[dict]:
 
         {
             "tipo": "questao_multipla_escolha",
-            "id": "q_024",
+            "id": "q_015",
             "pergunta": (
                 "De que forma a temperatura externa pode influenciar o comportamento térmico da sala?"
             ),
@@ -71,7 +71,7 @@ def get_blocos() -> list[dict]:
 
         {
             "tipo": "questao_multipla_escolha",
-            "id": "q_025",
+            "id": "q_016",
             "pergunta": (
                 "Qual é o principal efeito da radiação solar sobre as superfícies da sala?"
             ),
@@ -103,21 +103,6 @@ def get_blocos() -> list[dict]:
         },
 
         {
-            "tipo": "questao_multipla_escolha",
-            "id": "q_026",
-            "pergunta": (
-                "Por que a temperatura das superfícies é importante para a análise térmica da sala?"
-            ),
-            "alternativas": {
-                "a": "Porque as superfícies não participam das trocas de calor",
-                "b": "Porque elas podem trocar calor com o ar e influenciar o ambiente",
-                "c": "Porque apenas determinam a cor do ambiente",
-                "d": "Porque afetam apenas a ventilação da sala",
-            },
-            "alternativa_correta": "b",
-        },
-
-        {
             "tipo": "titulo",
             "texto": "Condições de ventilação",
         },
@@ -135,7 +120,7 @@ def get_blocos() -> list[dict]:
 
         {
             "tipo": "questao_multipla_escolha",
-            "id": "q_027",
+            "id": "q_017",
             "pergunta": (
                 "Qual é o papel da ventilação no comportamento térmico do ambiente?"
             ),
@@ -160,23 +145,8 @@ def get_blocos() -> list[dict]:
         },
 
         {
-            "tipo": "questao_multipla_escolha",
-            "id": "q_028",
-            "pergunta": (
-                "Qual conjunto representa corretamente as entradas térmicas consideradas na análise?"
-            ),
-            "alternativas": {
-                "a": "Temperatura externa, radiação solar, temperatura das superfícies e ventilação",
-                "b": "Número de alunos, cor das paredes e iluminação artificial",
-                "c": "Altura da sala e posição das carteiras",
-                "d": "Quantidade de equipamentos eletrônicos apenas",
-            },
-            "alternativa_correta": "a",
-        },
-
-        {
             "tipo": "questao_texto",
-            "id": "q_029",
+            "id": "q_018",
             "pergunta": (
                 "Explique, com suas palavras, como as entradas térmicas do sistema "
                 "(temperatura externa, radiação solar, superfícies e ventilação) "

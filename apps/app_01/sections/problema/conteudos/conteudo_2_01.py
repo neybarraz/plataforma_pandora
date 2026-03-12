@@ -46,7 +46,7 @@ def get_blocos() -> list[dict]:
         # },
         {
             "tipo": "questao_multipla_escolha",
-            "id": "q_013",
+            "id": "q_009",
             "pergunta": (
                 "Qual situação representa melhor a tensão central do problema de conforto térmico na sala?"
             ),
@@ -67,15 +67,5 @@ def get_blocos() -> list[dict]:
                 "forma como o calor é transferido e explica por que o conforto térmico pode variar "
                 "de um ponto para outro dentro do mesmo espaço."
             ),
-        },
-        {
-            "tipo": "questao_texto",
-            "id": "q_014",
-            "pergunta": (
-                "Explique, com suas palavras, por que a desuniformidade térmica no interior da sala "
-                "pode ser considerada a tensão central do problema de conforto térmico."
-            ),
-            "placeholder": "Digite sua resposta aqui...",
-            "altura": 180,
         },
     ]

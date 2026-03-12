@@ -40,7 +40,7 @@ def get_blocos() -> list[dict]:
 
         {
             "tipo": "questao_multipla_escolha",
-            "id": "q_036",
+            "id": "q_024",
             "pergunta": (
                 "Qual é a função de medir a temperatura do ar em vários pontos da sala?"
             ),
@@ -72,7 +72,7 @@ def get_blocos() -> list[dict]:
 
         {
             "tipo": "questao_multipla_escolha",
-            "id": "q_037",
+            "id": "q_025",
             "pergunta": (
                 "O que representa o campo de temperatura de um ambiente?"
             ),
@@ -102,21 +102,6 @@ def get_blocos() -> list[dict]:
         },
 
         {
-            "tipo": "questao_multipla_escolha",
-            "id": "q_038",
-            "pergunta": (
-                "O que indica a existência de um gradiente térmico em um ambiente?"
-            ),
-            "alternativas": {
-                "a": "Que todas as regiões possuem a mesma temperatura",
-                "b": "Que existem diferenças de temperatura entre pontos do espaço",
-                "c": "Que o ambiente está completamente isolado",
-                "d": "Que não existem trocas de calor",
-            },
-            "alternativa_correta": "b",
-        },
-
-        {
             "tipo": "texto",
             "texto": (
                 "A análise das saídas do sistema — temperaturas locais, campo térmico "
@@ -129,7 +114,7 @@ def get_blocos() -> list[dict]:
 
         {
             "tipo": "questao_multipla_escolha",
-            "id": "q_039",
+            "id": "q_026",
             "pergunta": (
                 "Qual conjunto representa corretamente as principais saídas do sistema térmico analisado?"
             ),
@@ -144,7 +129,7 @@ def get_blocos() -> list[dict]:
 
         {
             "tipo": "questao_texto",
-            "id": "q_040",
+            "id": "q_027",
             "pergunta": (
                 "Explique, com suas palavras, como as medições de temperatura em diferentes "
                 "pontos da sala podem ser usadas para construir o campo térmico do ambiente "

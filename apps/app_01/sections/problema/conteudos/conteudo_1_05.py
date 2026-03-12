@@ -50,7 +50,7 @@ def get_blocos() -> list[dict]:
         # },
         {
             "tipo": "questao_multipla_escolha",
-            "id": "q_009",
+            "id": "q_006",
             "pergunta": (
                 "Por que a observação das condições térmicas de uma sala não deve se basear "
                 "apenas em um único valor de temperatura do ar?"
@@ -77,7 +77,7 @@ def get_blocos() -> list[dict]:
         },
         {
             "tipo": "questao_texto",
-            "id": "q_010",
+            "id": "q_007",
             "pergunta": (
                 "Explique, com suas palavras, como a comparação entre a temperatura do ar, a "
                 "temperatura das superfícies e a influência da radiação solar ajuda a entender "

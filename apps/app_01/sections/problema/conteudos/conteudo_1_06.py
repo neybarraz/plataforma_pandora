@@ -51,7 +51,7 @@ def get_blocos() -> list[dict]:
         # },
         {
             "tipo": "questao_multipla_escolha",
-            "id": "q_011",
+            "id": "q_008",
             "pergunta": (
                 "Qual é a principal finalidade do sistema de medição adotado na análise térmica da sala?"
             ),
@@ -74,15 +74,5 @@ def get_blocos() -> list[dict]:
                 "em vários pontos permite interpretar o comportamento térmico da sala com base nas "
                 "interações entre ar e superfícies."
             ),
-        },
-        {
-            "tipo": "questao_texto",
-            "id": "q_012",
-            "pergunta": (
-                "Explique, com suas palavras, por que é importante medir a temperatura do ar e a "
-                "temperatura das superfícies em diferentes pontos da sala para analisar o conforto térmico."
-            ),
-            "placeholder": "Digite sua resposta aqui...",
-            "altura": 180,
         },
     ]

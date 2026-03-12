@@ -44,7 +44,7 @@ def get_blocos() -> list[dict]:
         # },
         {
             "tipo": "questao_multipla_escolha",
-            "id": "q_007",
+            "id": "q_005",
             "pergunta": (
                 "Qual característica física do ambiente está mais diretamente relacionada "
                 "à diferença de incidência solar entre as paredes da sala?"
@@ -67,16 +67,5 @@ def get_blocos() -> list[dict]:
                 "e transferem calor. Por essa razão, a caracterização física da sala não é apenas "
                 "uma descrição arquitetônica, mas parte essencial da interpretação física do sistema térmico."
             ),
-        },
-        {
-            "tipo": "questao_texto",
-            "id": "q_008",
-            "pergunta": (
-                "Explique, com suas palavras, por que as dimensões da sala, a orientação das paredes "
-                "e os materiais das superfícies são importantes para compreender a relação entre "
-                "a temperatura do ar e a temperatura das superfícies no ambiente."
-            ),
-            "placeholder": "Digite sua resposta aqui...",
-            "altura": 180,
         },
     ]
