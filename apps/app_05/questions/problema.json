@@ -1,0 +1,20 @@
+[
+  {
+    "id": "titulo_problema",
+    "label": "Título do problema",
+    "type": "text",
+    "default": ""
+  },
+  {
+    "id": "contexto",
+    "label": "Contextualização",
+    "type": "textarea",
+    "default": ""
+  },
+  {
+    "id": "pergunta_central",
+    "label": "Pergunta central",
+    "type": "textarea",
+    "default": ""
+  }
+]

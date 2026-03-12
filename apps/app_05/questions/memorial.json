@@ -1,0 +1,8 @@
+[
+  {
+    "id": "memorial_texto",
+    "label": "Memorial técnico",
+    "type": "textarea",
+    "default": ""
+  }
+]

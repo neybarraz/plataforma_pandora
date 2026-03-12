@@ -1,0 +1,49 @@
+apps/
+  app_05/
+    app.py
+    config.py
+
+    sections/
+      visao_geral/
+        main.py
+        renderer.py
+      problema/
+        problema.py
+      investigacao/
+        investigacao.py
+      solucao/
+        solucao.py
+      memorial/
+        memorial.py
+      avaliacao/
+        avaliacao.py
+
+    ui/
+      theme.py
+      layout.py
+      components.py
+
+    content/
+      visao_geral/
+        como_usar.json
+        problema_central.json
+      problema/
+        catalogo.json
+        conteudo_01.json
+        conteudo_02.json
+      avaliacao/
+        avaliacao.json
+
+    question_bank/
+      problema.json
+      avaliacao.json
+      investigacao.json
+
+    services/
+      content_loader.py
+      question_loader.py
+      progress_service.py
+
+    storage/
+      repo.py
+      schemas.py
