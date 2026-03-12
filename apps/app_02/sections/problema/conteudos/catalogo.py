@@ -1,5 +1,3 @@
-# apps/app_02/sections/problema/conteudos/catalogo.py
-
 from apps.app_02.sections.problema.conteudos import (
     conteudo_00,
     conteudo_01,
@@ -90,4 +88,14 @@ def get_conteudos():
             "titulo_menu": "Validação",
             "blocos": conteudo_13.get_blocos(),
         },
+    ]
+
+
+def get_paginas():
+    return [
+        {
+            "id": "pagina_00",
+            "titulo_menu": "Conteúdos",
+            "conteudos": get_conteudos(),
+        }
     ]
