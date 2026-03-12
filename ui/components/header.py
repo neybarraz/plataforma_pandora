@@ -49,7 +49,7 @@ def render_header():
     col1, col2 = st.columns([3, 2])
 
     with col1:
-        st.title("Pandora Learning Platform")
+        st.title("Pandora DAE Learning System")
 
     with col2:
         user = st.session_state["auth_user"]
@@ -169,3 +169,4 @@ def get_allowed_apps_for_current_user():
         return {app["app_id"] for app in APP_CATALOG}
 
     return get_allowed_apps(user)
+
