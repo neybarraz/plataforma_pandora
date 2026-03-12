@@ -5,3 +5,5 @@ passlib
 python-slugify
 python-dotenv
 psycopg[binary]
+numpy
+matplotlib
