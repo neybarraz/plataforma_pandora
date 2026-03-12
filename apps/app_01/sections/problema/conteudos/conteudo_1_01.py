@@ -70,14 +70,4 @@ def get_blocos() -> list[dict]:
                 "primeiro passo para transformar a percepção de desconforto em um problema de análise científica."
             ),
         },
-        {
-            "tipo": "questao_texto",
-            "id": "q_002",
-            "pergunta": (
-                "Explique, com suas palavras, por que a percepção de desconforto térmico em regiões diferentes "
-                "da sala pode indicar diferenças entre a temperatura do ar e a temperatura das superfícies do ambiente."
-            ),
-            "placeholder": "Digite sua resposta aqui...",
-            "altura": 180,
-        },
     ]
