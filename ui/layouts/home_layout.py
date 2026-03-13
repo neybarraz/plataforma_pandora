@@ -250,7 +250,7 @@ def render_home():
 
             if not is_logged:
                 st.button(
-                    "Entrar para ver acesso",
+                    "Entrar para acessar o laboratório",
                     key=f"btn_login_{app_id}",
                     help=description,
                     use_container_width=True,
@@ -276,5 +276,6 @@ def render_home():
                         disabled=True,
 
                     )
+
 
 
