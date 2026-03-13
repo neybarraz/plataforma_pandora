@@ -259,7 +259,7 @@ def render_home():
             else:
                 if is_allowed:
                     if st.button(
-                        "Acessar",
+                        "Abrir laboratório",
                         key=f"btn_open_{app_id}",
                         help=description,
                         use_container_width=True,
@@ -276,4 +276,5 @@ def render_home():
                         disabled=True,
 
                     )
+
 
