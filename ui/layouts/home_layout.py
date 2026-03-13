@@ -192,10 +192,10 @@ def render_home():
     st.markdown(
         """
         <div class="hero">
-          <div class="hero-title">Laboratórios Interativos</div>
+          <div class="hero-title">Laboratórios de Engenharia Aplicada</div>
           <p class="hero-sub">
-            Explore aplicações reais da física, engenharia e tecnologia.
-            Acesse os módulos liberados e investigue como os sistemas funcionam na prática.
+            Estude sistemas reais de engenharia.
+            Analise dados, investigue mecanismos e compreenda como a tecnologia funciona na prática.
           </p>
         </div>
         """,
@@ -276,3 +276,4 @@ def render_home():
                         disabled=True,
 
                     )
+
