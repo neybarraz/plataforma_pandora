@@ -545,7 +545,17 @@ def _render_bloco(
         return
 
     if tipo == "video":
-        st.info("Vídeo temporariamente desabilitado para teste.")
+        url = bloco.get("url", "")
+    
+        if not url:
+            st.warning("Vídeo sem URL.")
+            return
+    
+        st.video(url)
+    
+        if bloco.get("caption"):
+            st.caption(bloco["caption"])
+    
         return
 
     if tipo == "imagem":
@@ -803,3 +813,4 @@ def render(
         _flash_style(st.session_state.get("problema_saved_ids", set()))
         _render_conteudo(username, conteudo_atual, paginas)
         _status_salvamento()
+
