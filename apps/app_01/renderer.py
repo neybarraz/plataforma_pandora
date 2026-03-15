@@ -6,6 +6,7 @@ import streamlit as st
 
 from apps.app_01.config import QUESTIONS_DIR
 from apps.app_01.sections.visao_geral.main import render_visao_geral as _render_visao_geral
+from apps.app_01.sections.investigacao.investigacao import render as render_investigacao
 from apps.app_01.storage import update_answer
 
 
@@ -150,6 +151,15 @@ def render_question(
 
 
 def render_section(username: str, section: str, saved_data: Dict[str, Any]) -> None:
+    if section == "investigacao":
+        render_investigacao(
+            {
+                "username": username,
+                "saved_data": saved_data,
+            }
+        )
+        return
+
     questions = load_questions(section)
     answers = saved_data.get("responses", {}).get(section, {})
 
