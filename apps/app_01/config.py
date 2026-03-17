@@ -16,7 +16,6 @@ TABS = [
     {"key": "visao_geral", "label": "Disciplina"},
     {"key": "problema", "label": "Desafio"},
     {"key": "investigacao", "label": "Análise"},
-    {"key": "solucao", "label": "Explicação"},
+    {"key": "solucao", "label": "Entrega"},
     {"key": "memorial", "label": "Memorial Técnico"},
-    {"key": "avaliacao", "label": "Avaliação"},
 ]
