@@ -4,7 +4,12 @@ from copy import deepcopy
 from typing import Any, Dict
 
 from apps.app_02.config import APP_ID, TABS
-from core.app_data.repo import load_app_user_data, save_app_user_data
+from core.app_data.repo import (
+    load_app_user_data,
+    save_app_user_data,
+    update_app_user_path,
+    update_app_user_question_payload,
+)
 
 
 def empty_payload(username: str) -> Dict[str, Any]:
@@ -63,11 +68,22 @@ def save_user_data(username: str, data: Dict[str, Any]) -> None:
 
 
 def update_answer(username: str, section: str, field_name: str, value: Any) -> Dict[str, Any]:
-    data = load_user_data(username)
-    data["responses"].setdefault(section, {})
-    data["responses"][section][field_name] = value
-    save_user_data(username, data)
-    return data
+    section = str(section).strip()
+    field_name = str(field_name).strip()
+
+    if not section:
+        raise ValueError("section é obrigatório.")
+    if not field_name:
+        raise ValueError("field_name é obrigatório.")
+
+    updated = update_app_user_path(
+        username=username,
+        app_id=APP_ID,
+        path=["responses", section, field_name],
+        value=value,
+    )
+
+    return _normalize_payload(username=username, data=updated)
 
 
 def update_question_payload(
@@ -76,11 +92,25 @@ def update_question_payload(
     question_id: str,
     payload: Dict[str, Any],
 ) -> Dict[str, Any]:
-    data = load_user_data(username)
-    data["responses"].setdefault(section, {})
-    data["responses"][section][question_id] = payload
-    save_user_data(username, data)
-    return data
+    section = str(section).strip()
+    question_id = str(question_id).strip()
+
+    if not section:
+        raise ValueError("section é obrigatório.")
+    if not question_id:
+        raise ValueError("question_id é obrigatório.")
+    if not isinstance(payload, dict):
+        raise ValueError("payload deve ser um dict.")
+
+    updated = update_app_user_question_payload(
+        username=username,
+        app_id=APP_ID,
+        section=section,
+        question_id=question_id,
+        payload=payload,
+    )
+
+    return _normalize_payload(username=username, data=updated)
 
 
 def get_problem_stats(username: str) -> Dict[str, int]:
