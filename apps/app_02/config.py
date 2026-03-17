@@ -15,9 +15,8 @@ RESPONSES_DIR = BASE_DIR / "data" / "responses"
 # Ordem pedagógica do app
 TABS = [
     {"key": "visao_geral", "label": "Disciplina"},
-    {"key": "problema", "label": "Problema"},
-    {"key": "investigacao", "label": "Investigação"},
-    {"key": "solucao", "label": "Solução"},
+    {"key": "problema", "label": "Desafio"},
+    {"key": "investigacao", "label": "Análise"},
+    {"key": "solucao", "label": "Entrega"},
     {"key": "memorial", "label": "Memorial Técnico"},
-    {"key": "avaliacao", "label": "Avaliação"},
 ]
