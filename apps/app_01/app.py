@@ -5,6 +5,8 @@ from apps.app_01.config import APP_ID, APP_TITLE, APP_SUBTITLE, TABS
 from apps.app_01.renderer import render_section, render_visao_geral
 from apps.app_01.sections.problema.problema import render as render_problema
 from apps.app_01.sections.investigacao.investigacao import render as render_investigacao
+from apps.app_01.sections.solucao.solucao import render as render_solucao
+from apps.app_01.sections.memorial.memorial import render as render_memorial
 from apps.app_01.storage import load_user_data
 from core.permissions.stage_unlock import get_stage_unlocks_for_app
 
@@ -87,15 +89,21 @@ def run() -> None:
                     username=username,
                     saved_data=user_data,
                 )
-
             elif section_key == "investigacao":
                 render_investigacao(
-                    {
-                        "username": username,
-                        "saved_data": user_data,
-                    }
+                    username=username,
+                    saved_data=user_data,
                 )
-
+            elif section_key == "solucao":
+                render_solucao(
+                    username=username,
+                    saved_data=user_data,
+                )
+            elif section_key == "memorial":
+                render_memorial(
+                    username=username,
+                    saved_data=user_data,
+                )
             else:
                 render_section(
                     username=username,
