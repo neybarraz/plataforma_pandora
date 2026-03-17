@@ -8,6 +8,7 @@ from apps.app_02.sections.visao_geral.main import render_visao_geral as _render_
 
 from apps.app_02.sections.investigacao.investigacao import render as render_investigacao
 from apps.app_02.sections.solucao.solucao import render as render_solucao
+from apps.app_02.sections.memorial.memorial import render as render_memorial
 from apps.app_02.storage import update_answer
 
 def render_visao_geral() -> None:
