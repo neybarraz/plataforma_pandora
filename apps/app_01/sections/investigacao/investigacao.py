@@ -151,20 +151,27 @@ def _status_salvamento() -> None:
 # ESTADO / CACHE
 # ============================================================
 
-def _resolve_username(ctx: dict[str, Any] | None = None) -> str:
+def _resolve_username(
+    username: str | None = None,
+    ctx: dict[str, Any] | None = None,
+) -> str:
+    if isinstance(username, str) and username.strip():
+        return username.strip()
+
     if isinstance(ctx, dict):
-        username = str(ctx.get("username") or "").strip()
-        if username:
-            return username
+        ctx_username = ctx.get("username")
+        if isinstance(ctx_username, str) and ctx_username.strip():
+            return ctx_username.strip()
 
     auth_user = st.session_state.get("auth_user")
+
     if isinstance(auth_user, str) and auth_user.strip():
         return auth_user.strip()
 
     if isinstance(auth_user, dict):
-        username = str(auth_user.get("username") or "").strip()
-        if username:
-            return username
+        auth_username = auth_user.get("username")
+        if isinstance(auth_username, str) and auth_username.strip():
+            return auth_username.strip()
 
     return "anonimo"
 
@@ -195,9 +202,10 @@ def _get_saved_widget_value(item: Any) -> Any:
     return item if item is not None else ""
 
 
-def _ensure_state(username: str, ctx: dict[str, Any] | None = None) -> None:
-    saved_data = ctx.get("saved_data") if isinstance(ctx, dict) else None
-
+def _ensure_state(
+    username: str,
+    saved_data: dict[str, Any] | None = None,
+) -> None:
     defaults = {
         "analise_username": username,
         "analise_pagina_idx": 0,
@@ -208,7 +216,9 @@ def _ensure_state(username: str, ctx: dict[str, Any] | None = None) -> None:
         "analise_save_error": "",
         "analise_total_questoes": 0,
         "analise_respondidas": 0,
-        "analise_data_cache": saved_data if isinstance(saved_data, dict) else load_user_data(username),
+        "analise_data_cache": (
+            saved_data if isinstance(saved_data, dict) else load_user_data(username)
+        ),
     }
 
     for key, value in defaults.items():
@@ -216,13 +226,16 @@ def _ensure_state(username: str, ctx: dict[str, Any] | None = None) -> None:
             st.session_state[key] = value
 
 
-def _ensure_cache_loaded(username: str, ctx: dict[str, Any] | None = None) -> None:
+def _ensure_cache_loaded(
+    username: str,
+    saved_data: dict[str, Any] | None = None,
+) -> None:
     data = st.session_state.get("analise_data_cache")
     if isinstance(data, dict):
         return
 
-    if isinstance(ctx, dict) and isinstance(ctx.get("saved_data"), dict):
-        st.session_state.analise_data_cache = ctx["saved_data"]
+    if isinstance(saved_data, dict):
+        st.session_state.analise_data_cache = saved_data
     else:
         st.session_state.analise_data_cache = load_user_data(username)
 
@@ -793,10 +806,14 @@ def _render_conteudo(
 # ORQUESTRAÇÃO
 # ============================================================
 
-def render(ctx: dict[str, Any] | None = None) -> None:
-    username = _resolve_username(ctx)
-    _ensure_state(username, ctx)
-    _ensure_cache_loaded(username, ctx)
+def render(
+    username: str | None = None,
+    saved_data: dict[str, Any] | None = None,
+    ctx: dict[str, Any] | None = None,
+) -> None:
+    username = _resolve_username(username=username, ctx=ctx)
+    _ensure_state(username, saved_data=saved_data)
+    _ensure_cache_loaded(username, saved_data=saved_data)
     _inject_visual_css()
 
     paginas = get_paginas()
