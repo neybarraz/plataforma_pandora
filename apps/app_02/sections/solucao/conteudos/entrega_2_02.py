@@ -1,34 +1,44 @@
 from __future__ import annotations
 
+import streamlit as st
 
-CONTEUDO_ID = "em_construcao"
+
+CONTEUDO_ID = "manutencao_tecnica"
 
 
 def get_blocos() -> list[dict]:
     return [
         {
-            "tipo": "texto",
-            "texto": (
-                "#### Ambiente em desenvolvimento\n"
-                "Este ambiente ainda está em construção. "
-                "Estamos trabalhando para disponibilizar os conteúdos e ferramentas "
-                "de investigação científica em breve."
-            ),
-        },
-        {
-            "tipo": "texto",
-            "texto": (
-                "Nosso objetivo é oferecer um espaço interativo para análise, "
-                "experimentação e construção de conhecimento científico. "
-                "Novas funcionalidades e conteúdos serão adicionados gradualmente."
-            ),
-        },
-        {
             "tipo": "alerta",
-            "nivel": "info",
+            "nivel": "warning",
             "texto": (
-                "Em breve este ambiente estará disponível para uso completo. "
-                "Agradecemos sua paciência enquanto finalizamos a estrutura do sistema."
+                "Este módulo está temporariamente em **manutenção técnica**. "
+                "Estamos realizando ajustes na estrutura da plataforma para "
+                "melhorar a estabilidade e o registro das respostas."
+            ),
+        },
+        {
+            "tipo": "texto",
+            "texto": (
+                "Durante este período, algumas atividades interativas podem "
+                "não estar disponíveis. O conteúdo será restabelecido em breve."
             ),
         },
     ]
+
+
+def render_controles_especiais() -> None:
+    st.warning(
+        """
+        **Manutenção técnica em andamento**
+
+        Esta atividade está temporariamente indisponível enquanto realizamos
+        atualizações no sistema da plataforma.
+        """
+    )
+
+    st.info(
+        """
+        O conteúdo será reativado assim que a atualização for concluída.
+        """
+    )
