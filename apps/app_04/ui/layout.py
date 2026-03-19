@@ -9,9 +9,9 @@ import streamlit as st
 
 RADIUS = "8px"
 
-MENU_1_HEIGHT = "30px"   # principal
-MENU_2_HEIGHT = "26px"   # secundário
-MENU_3_HEIGHT = "24px"   # lateral
+MENU_1_HEIGHT = "34px"   # principal
+MENU_2_HEIGHT = "32px"   # secundário
+MENU_3_HEIGHT = "28px"   # lateral
 
 GRID_LATERAL = [1.05, 2.6]
 GRID_GAP = "medium"
@@ -19,7 +19,7 @@ GRID_GAP = "medium"
 
 # ============================================================
 # PALETA
-# Uma única cor-base (verde), em três intensidades.
+# Uma única cor-base (azul), em três intensidades.
 # Menu 1 = mais forte
 # Menu 2 = médio
 # Menu 3 = mais suave
@@ -89,6 +89,7 @@ DARK_TOKENS = {
     "progress_fill": "#3B82F6",
 }
 
+
 # ============================================================
 # HELPERS DE CSS
 # ============================================================
@@ -130,7 +131,8 @@ def _css_topo(class_name: str) -> str:
 
     .{class_name} strong,
     .{class_name} p,
-    .{class_name} div {{
+    .{class_name} div,
+    .{class_name} span {{
         color: var(--topo-text) !important;
     }}
     """
@@ -157,50 +159,62 @@ def _css_button_group(
         active_text = "var(--menu-1-text)"
         active_border = "var(--menu-1-border)"
         inactive_border = "var(--menu-inactive-border-strong)"
+        inactive_text_light = "var(--menu-inactive-text-on-light)"
+        inactive_text_dark = "var(--menu-inactive-text-on-dark)"
         height_var = "var(--menu-1-height)"
-        inactive_text = "var(--menu-inactive-text-on-dark)"
+        font_size = "0.90rem"
+        font_weight = "700"
     elif level == 2:
         active_bg = "var(--menu-2-bg)"
         active_bg_hover = "var(--menu-2-bg-hover)"
         active_text = "var(--menu-2-text)"
         active_border = "var(--menu-2-border)"
         inactive_border = "var(--menu-inactive-border-strong)"
+        inactive_text_light = "var(--menu-inactive-text-on-light)"
+        inactive_text_dark = "var(--menu-inactive-text-on-dark)"
         height_var = "var(--menu-2-height)"
-        inactive_text = "var(--menu-inactive-text-on-dark)"
+        font_size = "0.84rem"
+        font_weight = "600"
     else:
         active_bg = "var(--menu-3-bg)"
         active_bg_hover = "var(--menu-3-bg-hover)"
         active_text = "var(--menu-3-text)"
         active_border = "var(--menu-3-border)"
         inactive_border = "var(--menu-inactive-border-soft)"
+        inactive_text_light = "var(--menu-inactive-text-on-light)"
+        inactive_text_dark = "var(--menu-inactive-text-on-dark)"
         height_var = "var(--menu-3-height)"
-        inactive_text = "var(--menu-inactive-text-on-dark)"
-
-    block_margin = """
-    .st-key-{container_key} div[data-testid="stButton"] {{
-        margin: 0 0 -0.5rem 0 !important;
-        padding: 0 !important;
-    }}
-    """.format(container_key=container_key) if compact_margin else ""
+        font_size = "0.80rem"
+        font_weight = "600"
 
     justify = "flex-start" if align == "left" else "center"
     text_align = "left" if align == "left" else "center"
-    inner_padding = "0 0.65rem" if align == "left" else "0"
+    inner_padding = "0 0.70rem" if align == "left" else "0 0.55rem"
+    block_margin = "0 0 0.20rem 0" if compact_margin else "0 0 0.30rem 0"
 
     return f"""
-    {block_margin}
+    .st-key-{container_key} div[data-testid="stButton"] {{
+        margin: {block_margin} !important;
+        padding: 0 !important;
+    }}
 
     .st-key-{container_key} button {{
         border-radius: var(--radius-default) !important;
-        padding: 0 !important;
+        padding: {inner_padding} !important;
         height: {height_var} !important;
         min-height: {height_var} !important;
+        width: 100% !important;
         text-align: {text_align} !important;
         justify-content: {justify} !important;
+        box-shadow: var(--menu-shadow-soft) !important;
+        transition:
+            background-color 0.15s ease,
+            border-color 0.15s ease,
+            box-shadow 0.15s ease !important;
     }}
 
     .st-key-{container_key} button > div {{
-        padding: {inner_padding} !important;
+        padding: 0 !important;
         margin: 0 !important;
         height: 100% !important;
         display: flex !important;
@@ -210,14 +224,22 @@ def _css_button_group(
 
     .st-key-{container_key} button p {{
         margin: 0 !important;
-        font-size: 0.8rem !important;
-        line-height: 1 !important;
+        font-size: {font_size} !important;
+        font-weight: {font_weight} !important;
+        line-height: 1.05 !important;
+        letter-spacing: 0.01em !important;
+        text-align: {text_align} !important;
     }}
 
     .st-key-{container_key} button[kind="primary"] {{
         background: {active_bg} !important;
         color: {active_text} !important;
         border: 1px solid {active_border} !important;
+        box-shadow: var(--menu-shadow-active) !important;
+    }}
+
+    .st-key-{container_key} button[kind="primary"] p {{
+        color: {active_text} !important;
     }}
 
     .st-key-{container_key} button[kind="primary"]:hover {{
@@ -227,13 +249,28 @@ def _css_button_group(
 
     .st-key-{container_key} button[kind="secondary"] {{
         background: transparent !important;
-        color: {inactive_text} !important;
+        color: {inactive_text_light} !important;
         border: 1px solid {inactive_border} !important;
+    }}
+
+    .st-key-{container_key} button[kind="secondary"] p {{
+        color: {inactive_text_light} !important;
     }}
 
     .st-key-{container_key} button[kind="secondary"]:hover {{
         background: var(--menu-inactive-hover-soft) !important;
         border-color: {active_border} !important;
+        box-shadow: var(--menu-shadow-active) !important;
+    }}
+
+    @media (prefers-color-scheme: dark) {{
+        .st-key-{container_key} button[kind="secondary"] {{
+            color: {inactive_text_dark} !important;
+        }}
+
+        .st-key-{container_key} button[kind="secondary"] p {{
+            color: {inactive_text_dark} !important;
+        }}
     }}
     """
 
@@ -443,11 +480,10 @@ def render_percentual_conclusao(percentual: int) -> None:
         <div style="
         text-align:center;
         font-size:0.7rem;
-        margin-top:-0.5rem;
+        margin-top:-0.15rem;
         line-height:1;">
         {percentual}% concluído
         </div>
         """,
         unsafe_allow_html=True,
     )
-
