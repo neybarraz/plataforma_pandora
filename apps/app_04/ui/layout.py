@@ -41,7 +41,7 @@ LIGHT_TOKENS = {
     "menu_3_text": "#172554",
     "menu_3_border": "#60A5FA",
 
-    "menu_inactive_text_on_dark": "rgba(255,255,255,0.92)",
+    "menu_inactive_text_on_dark": "#60A5FA",
     "menu_inactive_text_on_light": "#1E3A8A",
     "menu_inactive_border_strong": "#60A5FA",
     "menu_inactive_border_soft": "#93C5FD",
@@ -73,7 +73,7 @@ DARK_TOKENS = {
     "menu_3_text": "#EFF6FF",
     "menu_3_border": "#3B82F6",
 
-    "menu_inactive_text_on_dark": "rgba(255,255,255,0.94)",
+    "menu_inactive_text_on_dark": "#60A5FA",
     "menu_inactive_text_on_light": "#1E3A8A",
     "menu_inactive_border_strong": "rgba(96,165,250,0.88)",
     "menu_inactive_border_soft": "rgba(96,165,250,0.72)",
@@ -238,7 +238,9 @@ def _css_button_group(
         box-shadow: var(--menu-shadow-active) !important;
     }}
 
-    .st-key-{container_key} button[kind="primary"] p {{
+    .st-key-{container_key} button[kind="primary"] p,
+    .st-key-{container_key} button[kind="primary"] span,
+    .st-key-{container_key} button[kind="primary"] div {{
         color: {active_text} !important;
     }}
 
@@ -253,7 +255,9 @@ def _css_button_group(
         border: 1px solid {inactive_border} !important;
     }}
 
-    .st-key-{container_key} button[kind="secondary"] p {{
+    .st-key-{container_key} button[kind="secondary"] p,
+    .st-key-{container_key} button[kind="secondary"] span,
+    .st-key-{container_key} button[kind="secondary"] div {{
         color: {inactive_text_light} !important;
     }}
 
@@ -268,7 +272,9 @@ def _css_button_group(
             color: {inactive_text_dark} !important;
         }}
 
-        .st-key-{container_key} button[kind="secondary"] p {{
+        .st-key-{container_key} button[kind="secondary"] p,
+        .st-key-{container_key} button[kind="secondary"] span,
+        .st-key-{container_key} button[kind="secondary"] div {{
             color: {inactive_text_dark} !important;
         }}
     }}
