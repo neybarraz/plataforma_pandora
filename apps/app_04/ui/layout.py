@@ -26,37 +26,8 @@ GRID_GAP = "medium"
 # ============================================================
 
 LIGHT_TOKENS = {
-    "menu_1_bg": "#1E40AF",          # azul forte
-    "menu_1_bg_hover": "#1D4ED8",
-    "menu_1_text": "#FFFFFF",
-    "menu_1_border": "#1E40AF",
-
-    "menu_2_bg": "#3B82F6",          # azul médio
-    "menu_2_bg_hover": "#2563EB",
-    "menu_2_text": "#FFFFFF",
-    "menu_2_border": "#3B82F6",
-
-    "menu_3_bg": "#DBEAFE",          # azul claro
-    "menu_3_bg_hover": "#BFDBFE",
-    "menu_3_text": "#1E3A8A",
-    "menu_3_border": "#93C5FD",
-
-    "menu_inactive_text_on_dark": "rgba(255,255,255,0.88)",
-    "menu_inactive_text_on_light": "rgba(30,58,138,0.92)",
-    "menu_inactive_border_strong": "rgba(59,130,246,0.72)",
-    "menu_inactive_border_soft": "rgba(59,130,246,0.45)",
-    "menu_inactive_hover_soft": "rgba(59,130,246,0.12)",
-
-    "topo_text": "white",
-    "titulo_destaque": "#3B82F6",
-    "content_header": "0.95rem",
-    "subtitulo_bloco": "0.78rem",
-    "progress_fill": "#3B82F6",
-}
-
-DARK_TOKENS = {
     "menu_1_bg": "#1E3A8A",
-    "menu_1_bg_hover": "#1E40AF",
+    "menu_1_bg_hover": "#1D4ED8",
     "menu_1_text": "#FFFFFF",
     "menu_1_border": "#1E3A8A",
 
@@ -65,24 +36,58 @@ DARK_TOKENS = {
     "menu_2_text": "#FFFFFF",
     "menu_2_border": "#2563EB",
 
-    "menu_3_bg": "#1E3A8A",
-    "menu_3_bg_hover": "#1E40AF",
-    "menu_3_text": "#DBEAFE",
-    "menu_3_border": "#3B82F6",
+    "menu_3_bg": "#DBEAFE",
+    "menu_3_bg_hover": "#BFDBFE",
+    "menu_3_text": "#172554",
+    "menu_3_border": "#60A5FA",
 
-    "menu_inactive_text_on_dark": "rgba(255,255,255,0.88)",
-    "menu_inactive_text_on_light": "rgba(30,58,138,0.92)",
-    "menu_inactive_border_strong": "rgba(59,130,246,0.82)",
-    "menu_inactive_border_soft": "rgba(59,130,246,0.56)",
-    "menu_inactive_hover_soft": "rgba(59,130,246,0.14)",
+    "menu_inactive_text_on_dark": "rgba(255,255,255,0.92)",
+    "menu_inactive_text_on_light": "#1E3A8A",
+    "menu_inactive_border_strong": "#60A5FA",
+    "menu_inactive_border_soft": "#93C5FD",
+    "menu_inactive_hover_soft": "rgba(37,99,235,0.10)",
 
-    "topo_text": "white",
-    "titulo_destaque": "#60A5FA",
+    "menu_shadow_soft": "0 0 0 1px rgba(37,99,235,0.10)",
+    "menu_shadow_active": "0 1px 2px rgba(30,58,138,0.18)",
+
+    "topo_text": "#111827",
+    "titulo_destaque": "#3B82F6",
     "content_header": "0.95rem",
     "subtitulo_bloco": "0.78rem",
     "progress_fill": "#3B82F6",
 }
 
+DARK_TOKENS = {
+    "menu_1_bg": "#1D4ED8",
+    "menu_1_bg_hover": "#2563EB",
+    "menu_1_text": "#FFFFFF",
+    "menu_1_border": "#3B82F6",
+
+    "menu_2_bg": "#2563EB",
+    "menu_2_bg_hover": "#3B82F6",
+    "menu_2_text": "#FFFFFF",
+    "menu_2_border": "#60A5FA",
+
+    "menu_3_bg": "#0F2E6E",
+    "menu_3_bg_hover": "#1E3A8A",
+    "menu_3_text": "#EFF6FF",
+    "menu_3_border": "#3B82F6",
+
+    "menu_inactive_text_on_dark": "rgba(255,255,255,0.94)",
+    "menu_inactive_text_on_light": "#1E3A8A",
+    "menu_inactive_border_strong": "rgba(96,165,250,0.88)",
+    "menu_inactive_border_soft": "rgba(96,165,250,0.72)",
+    "menu_inactive_hover_soft": "rgba(59,130,246,0.16)",
+
+    "menu_shadow_soft": "0 0 0 1px rgba(96,165,250,0.14)",
+    "menu_shadow_active": "0 1px 3px rgba(0,0,0,0.35)",
+
+    "topo_text": "#FFFFFF",
+    "titulo_destaque": "#60A5FA",
+    "content_header": "0.95rem",
+    "subtitulo_bloco": "0.78rem",
+    "progress_fill": "#3B82F6",
+}
 
 # ============================================================
 # HELPERS DE CSS
