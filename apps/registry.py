@@ -16,5 +16,8 @@ APPS = {
         "label": "App 05",
         "module": "apps.app_05.app",
     },    
-
+    "app_12": {
+        "label": "App 12",
+        "module": "apps.app_12.app",
+    },    
 }
