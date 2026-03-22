@@ -43,6 +43,14 @@ APP_CATALOG = [
         "card_image": "el001.png",
         "description": "Investigue como sistemas eletrônicos garantem continuidade de energia quando ocorre falha na alimentação principal. Explore o funcionamento de sensores, microcontroladores e circuitos de reserva utilizados em dispositivos baseados em ESP32."
     }
+    {
+        "app_id": "app_12",
+        "title": "Sistemas de Bombeamento de Água",
+        "subtitle": "Soluções em Dimensionamento de Fios",
+        "card_image": "ba001.png",
+        "description": "Explore como motores elétricos, sensores e painéis de controle operam juntos para movimentar água em edifícios e instalações industriais. Entenda o funcionamento dos sistemas de acionamento e controle utilizados no bombeamento moderno."
+    },
+    
 ]
 
 
