@@ -4,10 +4,6 @@ from typing import Any
 import streamlit as st
 
 
-# ============================================================
-# LEITURA DE WIDGET (compatível com Investigação e legado)
-# ============================================================
-
 def get_widget_value(question_id: str):
     key_inv = f"investigacao_widget_{question_id}"
     key_old = f"analise_widget_{question_id}"
@@ -23,10 +19,6 @@ def normalizar(valor: Any) -> str:
         return ""
     return str(valor).strip().lower()
 
-
-# ============================================================
-# CÁLCULO DO DIAGNÓSTICO (GENÉRICO)
-# ============================================================
 
 def calcular_resultado(questoes: list[dict[str, Any]]) -> dict[str, Any]:
     ids = [q["id"] for q in questoes]
@@ -71,10 +63,6 @@ def calcular_resultado(questoes: list[dict[str, Any]]) -> dict[str, Any]:
         "precisa_reforco": respondido and not acertou_tudo,
     }
 
-
-# ============================================================
-# BUILDERS GENÉRICOS DE BLOCOS
-# ============================================================
 
 def bloco_questao(q: dict[str, Any]) -> dict[str, Any]:
     return {
