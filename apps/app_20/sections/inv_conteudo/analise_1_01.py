@@ -19,7 +19,13 @@ DIAG_CORRETAS = {
 
 
 def _get_widget_value(question_id: str):
-    return st.session_state.get(f"investigacao_widget_{question_id}")
+    key_inv = f"investigacao_widget_{question_id}"
+    key_old = f"analise_widget_{question_id}"
+
+    if key_inv in st.session_state:
+        return st.session_state.get(key_inv)
+
+    return st.session_state.get(key_old)
 
 
 def _normalizar_resposta(valor) -> str:
@@ -401,19 +407,26 @@ def _blocos_reflexao_final() -> list[dict]:
 def get_blocos() -> list[dict]:
     resultado = _resultado_diagnostico()
 
+    debug = {
+        "tipo": "alerta",
+        "nivel": "info",
+        "texto": (
+            f"DEBUG | respondido={resultado['respondido']} | "
+            f"acertos={resultado['total_acertos']} | "
+            f"q1='{resultado['respostas'].get(Q_D_001, '')}' | "
+            f"q2='{resultado['respostas'].get(Q_D_002, '')}'"
+        ),
+    }
+
     if not resultado["respondido"]:
         if resultado["pendentes"] and len(resultado["pendentes"]) < len(DIAG_QUESTOES):
-            return _blocos_diagnostico_pendentes()
-        return _blocos_diagnostico_completo()
+            return [debug] + _blocos_diagnostico_pendentes()
+        return [debug] + _blocos_diagnostico_completo()
 
     if resultado["acertou_tudo"]:
-        return _blocos_sucesso_diagnostico()
+        return [debug] + _blocos_sucesso_diagnostico()
 
-    return (
-        _blocos_correcao_diagnostico()
-        + _blocos_reforco()
-        + _blocos_reflexao_final()
-    )
+    return [debug] + _blocos_correcao_diagnostico() + _blocos_reforco() + _blocos_reflexao_final()
 
 
 def render_controles_especiais() -> None:
