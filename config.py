@@ -30,7 +30,7 @@ APP_CATALOG = [
         "description": "Analise pressão, vazão e perdas de carga em sistemas de tubulação. Descubra como os princípios da mecânica dos fluidos explicam o comportamento da água em redes de bombeamento reais."
     },
     {
-        "app_id": "app_04",
+        "app_id": "app_20",
         "title": "Sistema de Produção de Frangos de Postura",
         "subtitle": "Monitoramento Inteligente do Aviário",
         "card_image": "av001.png",
