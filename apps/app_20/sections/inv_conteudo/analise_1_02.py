@@ -1,9 +1,15 @@
 from __future__ import annotations
 
+from typing import Any
+
 import streamlit as st
 
 
-BASE_ID = "analise_1_02"
+# ============================================================
+# IDENTIDADE DO MÓDULO
+# ============================================================
+
+BASE_ID = "analise_1_01"
 
 Q_D_001 = f"{BASE_ID}_001"
 Q_D_002 = f"{BASE_ID}_002"
@@ -11,60 +17,233 @@ Q_F_001 = f"{BASE_ID}_003"
 Q_F_002 = f"{BASE_ID}_004"
 
 
-DIAG_QUESTOES = (Q_D_001, Q_D_002)
-DIAG_CORRETAS = {
-    Q_D_001: "b",
-    Q_D_002: "c",
-}
+# ============================================================
+# CONFIGURAÇÃO DECLARATIVA
+# ============================================================
 
+DIAGNOSTICO_QUESTOES = [
+    {
+        "id": Q_D_001,
+        "pergunta": (
+            "No circuito de alimentação de um motor de bomba, a grandeza tensão elétrica pode ser "
+            "interpretada fisicamente como:"
+        ),
+        "alternativas": {
+            "a": "A quantidade de carga que atravessa o condutor por segundo",
+            "b": "A diferença de potencial elétrico que impulsiona o movimento de cargas no circuito",
+            "c": "A resistência oferecida pelo motor à passagem de corrente",
+            "d": "A energia dissipada exclusivamente na forma de calor nos cabos",
+        },
+        "alternativa_correta": "b",
+        "correcao": (
+            "Na questão 1, a resposta correta é <b>b</b>. A <b>tensão elétrica</b> é a "
+            "<b>diferença de potencial</b> entre dois pontos do circuito. Ela representa a "
+            "energia potencial elétrica disponível por unidade de carga para impulsionar o "
+            "movimento das cargas. Em termos gerais:\n\n"
+            "$$ V = \\frac{W}{q} $$\n\n"
+            "em que <b>V</b> é a tensão, <b>W</b> é o trabalho ou energia transferida e "
+            "<b>q</b> é a carga elétrica. No circuito de alimentação do motor, a tensão "
+            "fornecida pela rede estabelece a condição energética necessária para a circulação "
+            "de corrente."
+        ),
+    },
+    {
+        "id": Q_D_002,
+        "pergunta": (
+            "Em regime de operação, a corrente elétrica que circula no circuito de alimentação do motor "
+            "representa principalmente:"
+        ),
+        "alternativas": {
+            "a": "A tensão nominal aplicada entre os terminais do motor",
+            "b": "A potência mecânica útil já convertida no eixo",
+            "c": "A taxa de escoamento de carga elétrica através dos condutores",
+            "d": "A oposição elétrica do isolamento do cabo ao campo elétrico",
+        },
+        "alternativa_correta": "c",
+        "correcao": (
+            "Na questão 2, a resposta correta é <b>c</b>. A <b>corrente elétrica</b> expressa "
+            "a taxa de escoamento de carga elétrica através de uma seção transversal do condutor. "
+            "Sua definição fundamental é:\n\n"
+            "$$ I = \\frac{\\Delta q}{\\Delta t} $$\n\n"
+            "em que <b>I</b> é a corrente, <b>Δq</b> é a quantidade de carga transportada e "
+            "<b>Δt</b> é o intervalo de tempo. No circuito do motor, a corrente indica a "
+            "intensidade da solicitação elétrica imposta aos cabos e está diretamente ligada "
+            "à análise de aquecimento, perdas e dimensionamento."
+        ),
+    },
+]
+
+REFORCO_BLOCOS = [
+    {
+        "tipo": "subtitulo",
+        "texto": "Reforço conceitual",
+    },
+    {
+        "tipo": "texto",
+        "texto": (
+            "Para interpretar corretamente a alimentação elétrica de um motor, é necessário distinguir "
+            "com clareza as grandezas tensão, corrente e potência."
+        ),
+    },
+    {
+        "tipo": "texto",
+        "texto": (
+            "<b>Tensão elétrica</b> é a energia potencial disponível por unidade de carga entre dois "
+            "pontos do circuito. É essa diferença de potencial que cria a condição para o movimento "
+            "das cargas."
+        ),
+    },
+    {
+        "tipo": "texto",
+        "texto": (
+            "<b>Corrente elétrica</b> é a taxa de escoamento de carga elétrica ao longo do tempo. "
+            "Ela indica o quanto o circuito está sendo solicitado eletricamente."
+        ),
+    },
+    {
+        "tipo": "texto",
+        "texto": (
+            "<b>Potência elétrica</b> representa a taxa de transferência ou conversão de energia. "
+            "Na alimentação de motores trifásicos, uma relação central é:\n\n"
+            "$$ P = \\sqrt{3}\\,V\\,I\\,\\cos\\varphi $$"
+        ),
+    },
+    {
+        "tipo": "texto",
+        "texto": (
+            "Portanto, compreender tensão, corrente e potência é o primeiro passo para interpretar "
+            "tecnicamente o funcionamento do sistema de bombeamento. Sem esse bloco conceitual, "
+            "não é possível avaliar com rigor se os cabos instalados são suficientes para alimentar "
+            "o motor com segurança e desempenho adequado."
+        ),
+    },
+    {
+        "tipo": "texto",
+        "texto": (
+            "<b>Síntese conceitual</b>\n\n"
+            "A tensão elétrica representa diferença de potencial e energia por unidade de carga. "
+            "A corrente elétrica mede a taxa de escoamento de cargas no circuito. A potência elétrica "
+            "expressa a taxa de transferência ou conversão de energia. Em motores, a corrente depende "
+            "de tensão, potência, fator de potência e rendimento. Essas grandezas constituem a base "
+            "para analisar a alimentação elétrica do motor da bomba."
+        ),
+    },
+]
+
+REFLEXAO_FINAL_BLOCOS = [
+    {
+        "tipo": "subtitulo",
+        "texto": "Reflexão final",
+    },
+    {
+        "tipo": "alerta",
+        "nivel": "info",
+        "texto": (
+            "Nesta etapa final, suas respostas serão registradas para análise. "
+            "Não será exibido feedback imediato de certo ou errado."
+        ),
+    },
+    {
+        "tipo": "questao_multipla_escolha",
+        "id": Q_F_001,
+        "pergunta": (
+            "Em um circuito que alimenta um motor, a tensão elétrica é mais corretamente interpretada como:"
+        ),
+        "alternativas": {
+            "a": "A taxa de transporte de carga no condutor",
+            "b": "A energia potencial elétrica disponível por unidade de carga entre dois pontos",
+            "c": "A potência dissipada em regime permanente",
+            "d": "A resistência total equivalente do sistema",
+        },
+        "alternativa_correta": "b",
+    },
+    {
+        "tipo": "questao_multipla_escolha",
+        "id": Q_F_002,
+        "pergunta": (
+            "Na análise de um motor trifásico, a potência ativa elétrica absorvida é associada principalmente à relação:"
+        ),
+        "alternativas": {
+            "a": "$$P = \\sqrt{3}\\,V\\,I\\,\\cos\\varphi$$",
+            "b": "$$P = \\frac{V}{I}$$",
+            "c": "$$P = R\\,V$$",
+            "d": "$$P = \\frac{I}{R}$$",
+        },
+        "alternativa_correta": "a",
+    },
+]
+
+MENSAGEM_SUCESSO = (
+    "Você demonstrou domínio inicial sobre tensão elétrica, corrente elétrica e suas "
+    "relações com a análise da alimentação do motor. Este conteúdo pode ser considerado "
+    "concluído nesta etapa."
+)
+
+
+# ============================================================
+# NÚCLEO REUTILIZÁVEL
+# ============================================================
 
 def _get_widget_value(question_id: str):
-    return st.session_state.get(f"analise_widget_{question_id}")
+    key_inv = f"investigacao_widget_{question_id}"
+    key_old = f"analise_widget_{question_id}"
+
+    if key_inv in st.session_state:
+        return st.session_state.get(key_inv)
+
+    return st.session_state.get(key_old)
 
 
-def _normalizar_resposta(valor) -> str:
+def _normalizar_resposta(valor: Any) -> str:
     if valor is None:
         return ""
     return str(valor).strip().lower()
 
 
-def _respostas_diagnostico() -> dict[str, str]:
+def _questoes_ids(questoes: list[dict[str, Any]]) -> tuple[str, ...]:
+    return tuple(q["id"] for q in questoes)
+
+
+def _gabarito(questoes: list[dict[str, Any]]) -> dict[str, str]:
     return {
-        qid: _normalizar_resposta(_get_widget_value(qid))
-        for qid in DIAG_QUESTOES
+        q["id"]: str(q["alternativa_correta"]).strip().lower()
+        for q in questoes
     }
 
 
-def _questoes_pendentes() -> list[str]:
-    respostas = _respostas_diagnostico()
-    return [qid for qid in DIAG_QUESTOES if not respostas[qid]]
+def _respostas(questoes: list[dict[str, Any]]) -> dict[str, str]:
+    return {
+        q["id"]: _normalizar_resposta(_get_widget_value(q["id"]))
+        for q in questoes
+    }
 
 
-def _diagnostico_respondido() -> bool:
-    return len(_questoes_pendentes()) == 0
+def _resultado_diagnostico(
+    questoes: list[dict[str, Any]],
+) -> dict[str, Any]:
+    ids = _questoes_ids(questoes)
+    corretas_map = _gabarito(questoes)
+    respostas = _respostas(questoes)
 
-
-def _resultado_diagnostico() -> dict:
-    respostas = _respostas_diagnostico()
-    pendentes = _questoes_pendentes()
+    pendentes = [qid for qid in ids if not respostas[qid]]
 
     corretas: list[str] = []
     erradas: list[str] = []
 
-    for qid in DIAG_QUESTOES:
+    for qid in ids:
         resposta = respostas[qid]
         if not resposta:
             continue
 
-        if resposta == DIAG_CORRETAS[qid]:
+        if resposta == corretas_map[qid]:
             corretas.append(qid)
         else:
             erradas.append(qid)
 
     total_acertos = len(corretas)
     respondido = len(pendentes) == 0
-    acertou_tudo = respondido and total_acertos == len(DIAG_QUESTOES)
-    precisa_reforco = respondido and total_acertos < len(DIAG_QUESTOES)
+    acertou_tudo = respondido and total_acertos == len(ids)
+    precisa_reforco = respondido and total_acertos < len(ids)
 
     return {
         "respondido": respondido,
@@ -72,71 +251,40 @@ def _resultado_diagnostico() -> dict:
         "respostas": respostas,
         "corretas": corretas,
         "erradas": erradas,
-        "q1_correta": Q_D_001 in corretas,
-        "q2_correta": Q_D_002 in corretas,
         "total_acertos": total_acertos,
         "acertou_tudo": acertou_tudo,
         "precisa_reforco": precisa_reforco,
     }
 
 
-def _bloco_diagnostico_q1() -> dict:
+def _bloco_questao(q: dict[str, Any]) -> dict[str, Any]:
     return {
         "tipo": "questao_multipla_escolha",
-        "id": Q_D_001,
-        "pergunta": (
-            "Em um trecho do circuito de alimentação de um motor de bomba, mede-se uma tensão de 24 V "
-            "aplicada a um condutor equivalente cuja resistência total é 6 Ω. De acordo com a Lei de Ohm, "
-            "a corrente elétrica nesse trecho é:"
-        ),
-        "alternativas": {
-            "a": "0,25 A",
-            "b": "4 A",
-            "c": "18 A",
-            "d": "144 A",
-        },
-        "alternativa_correta": "b",
+        "id": q["id"],
+        "pergunta": q["pergunta"],
+        "alternativas": q["alternativas"],
+        "alternativa_correta": q["alternativa_correta"],
     }
 
 
-def _bloco_diagnostico_q2() -> dict:
-    return {
-        "tipo": "questao_multipla_escolha",
-        "id": Q_D_002,
-        "pergunta": (
-            "Um equipamento elétrico opera em corrente contínua com potência de 2200 W sob tensão de 220 V. "
-            "Desprezando perdas adicionais, a corrente elétrica requerida é:"
-        ),
-        "alternativas": {
-            "a": "0,1 A",
-            "b": "4,5 A",
-            "c": "10 A",
-            "d": "484 A",
-        },
-        "alternativa_correta": "c",
-    }
+def _mapa_questoes(questoes: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
+    return {q["id"]: q for q in questoes}
 
 
-def _mapa_blocos_diagnostico() -> dict[str, dict]:
-    return {
-        Q_D_001: _bloco_diagnostico_q1(),
-        Q_D_002: _bloco_diagnostico_q2(),
-    }
+def _blocos_diagnostico_completo(
+    questoes: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    return [_bloco_questao(q) for q in questoes]
 
 
-def _blocos_diagnostico_completo() -> list[dict]:
-    return [
-        _bloco_diagnostico_q1(),
-        _bloco_diagnostico_q2(),
-    ]
-
-
-def _blocos_diagnostico_pendentes() -> list[dict]:
-    resultado = _resultado_diagnostico()
+def _blocos_diagnostico_pendentes(
+    questoes: list[dict[str, Any]],
+    resultado: dict[str, Any],
+) -> list[dict[str, Any]]:
     pendentes = resultado["pendentes"]
-    mapa = _mapa_blocos_diagnostico()
+    mapa = _mapa_questoes(questoes)
 
-    blocos: list[dict] = [
+    blocos: list[dict[str, Any]] = [
         {
             "tipo": "alerta",
             "nivel": "info",
@@ -148,21 +296,17 @@ def _blocos_diagnostico_pendentes() -> list[dict]:
 
     for qid in pendentes:
         if qid in mapa:
-            blocos.append(mapa[qid])
+            blocos.append(_bloco_questao(mapa[qid]))
 
     return blocos
 
 
-def _blocos_sucesso_diagnostico() -> list[dict]:
+def _blocos_sucesso_diagnostico() -> list[dict[str, Any]]:
     return [
         {
             "tipo": "alerta",
             "nivel": "success",
-            "texto": (
-                "Você demonstrou domínio inicial sobre Lei de Ohm e sobre as relações entre "
-                "potência, tensão e corrente em circuitos elétricos. Este conteúdo pode ser "
-                "considerado concluído nesta etapa."
-            ),
+            "texto": MENSAGEM_SUCESSO,
         },
         {
             "tipo": "texto",
@@ -173,10 +317,11 @@ def _blocos_sucesso_diagnostico() -> list[dict]:
     ]
 
 
-def _blocos_correcao_diagnostico() -> list[dict]:
-    resultado = _resultado_diagnostico()
-
-    blocos: list[dict] = [
+def _blocos_correcao_diagnostico(
+    questoes: list[dict[str, Any]],
+    resultado: dict[str, Any],
+) -> list[dict[str, Any]]:
+    blocos: list[dict[str, Any]] = [
         {
             "tipo": "alerta",
             "nivel": "warning",
@@ -191,233 +336,53 @@ def _blocos_correcao_diagnostico() -> list[dict]:
         },
     ]
 
-    if not resultado.get("q1_correta", False):
-        blocos.append(
-            {
-                "tipo": "texto",
-                "texto": (
-                    "Na questão 1, a resposta correta é <b>b</b>. Pela <b>Lei de Ohm</b>, a relação entre "
-                    "tensão, resistência e corrente é dada por:\n\n"
-                    "$$ V = R\\,I $$\n\n"
-                    "Logo:\n\n"
-                    "$$ I = \\frac{V}{R} = \\frac{24}{6} = 4\\ \\text{A} $$\n\n"
-                    "Essa relação mostra que, em um trecho resistivo do circuito, a corrente elétrica "
-                    "depende diretamente da tensão aplicada e da resistência equivalente associada à passagem "
-                    "de cargas. Em análises de engenharia, essa equação é fundamental para interpretar "
-                    "solicitações elétricas em condutores e cargas."
-                ),
-            }
-        )
-
-    if not resultado.get("q2_correta", False):
-        blocos.append(
-            {
-                "tipo": "texto",
-                "texto": (
-                    "Na questão 2, a resposta correta é <b>c</b>. Em uma formulação simplificada, a relação "
-                    "entre potência, tensão e corrente é:\n\n"
-                    "$$ P = V\\,I $$\n\n"
-                    "Isolando a corrente:\n\n"
-                    "$$ I = \\frac{P}{V} = \\frac{2200}{220} = 10\\ \\text{A} $$\n\n"
-                    "Essa equação é central na análise de circuitos de alimentação, pois permite estimar a "
-                    "corrente exigida por uma carga a partir de sua potência elétrica e da tensão de operação. "
-                    "No dimensionamento de condutores, essa corrente calculada constitui um parâmetro básico."
-                ),
-            }
-        )
+    for q in questoes:
+        if q["id"] not in resultado["corretas"]:
+            blocos.append(
+                {
+                    "tipo": "texto",
+                    "texto": q["correcao"],
+                }
+            )
 
     return blocos
 
 
-def _blocos_reforco() -> list[dict]:
-    return [
-        {
-            "tipo": "subtitulo",
-            "texto": "Reforço do conteúdo",
-        },
-        {
-            "tipo": "texto",
-            "texto": (
-                "A interpretação de circuitos elétricos em aplicações de engenharia depende da compreensão "
-                "das relações matemáticas que conectam as grandezas fundamentais do sistema. No caso de um "
-                "circuito de alimentação de motor, as relações entre tensão, corrente, resistência e potência "
-                "permitem estimar a solicitação elétrica imposta aos condutores e avaliar se a instalação "
-                "opera em condições compatíveis com o problema analisado."
-            ),
-        },
-        {
-            "tipo": "subtitulo",
-            "texto": "Lei de Ohm",
-        },
-        {
-            "tipo": "texto",
-            "texto": (
-                "A <b>Lei de Ohm</b> descreve a relação básica entre tensão elétrica, corrente elétrica e "
-                "resistência em um elemento resistivo:\n\n"
-                "$$ V = R\\,I $$\n\n"
-                "em que <b>V</b> é a diferença de potencial, <b>R</b> é a resistência elétrica e <b>I</b> é "
-                "a corrente. Essa expressão também pode ser escrita como:\n\n"
-                "$$ I = \\frac{V}{R} $$\n\n"
-                "ou\n\n"
-                "$$ R = \\frac{V}{I} $$\n\n"
-                "Essas formas são úteis quando se deseja calcular a corrente que atravessa um trecho do circuito "
-                "ou a resistência equivalente associada à passagem de corrente elétrica."
-            ),
-        },
-        {
-            "tipo": "texto",
-            "texto": (
-                "Em condutores elétricos, a resistência depende do material, do comprimento e da seção "
-                "transversal. Para análise de engenharia, essa dependência pode ser representada por:\n\n"
-                "$$ R = \\rho\\,\\frac{L}{A} $$\n\n"
-                "em que <b>ρ</b> é a resistividade elétrica do material, <b>L</b> é o comprimento do condutor "
-                "e <b>A</b> é a área da seção transversal. Essa equação é importante em instalações elétricas "
-                "porque mostra que cabos mais longos ou com menor seção apresentam maior resistência, o que "
-                "afeta a corrente, as perdas e a queda de tensão."
-            ),
-        },
-        {
-            "tipo": "subtitulo",
-            "texto": "Relação entre potência, tensão e corrente",
-        },
-        {
-            "tipo": "texto",
-            "texto": (
-                "Outra relação fundamental conecta <b>potência elétrica</b>, <b>tensão</b> e <b>corrente</b>. "
-                "Em sua forma elementar, tem-se:\n\n"
-                "$$ P = V\\,I $$\n\n"
-                "em que <b>P</b> é a potência elétrica ativa fornecida à carga em uma formulação simplificada. "
-                "Essa expressão permite obter:\n\n"
-                "$$ I = \\frac{P}{V} $$\n\n"
-                "e também:\n\n"
-                "$$ V = \\frac{P}{I} $$\n\n"
-                "No contexto do circuito de alimentação de um motor, essa relação é usada para estimar a corrente "
-                "requerida a partir da potência nominal e da tensão de operação."
-            ),
-        },
-        {
-            "tipo": "texto",
-            "texto": (
-                "Em problemas de engenharia elétrica aplicada, especialmente em motores, a análise pode exigir "
-                "formas mais completas da potência. Em sistemas monofásicos com fator de potência, utiliza-se:\n\n"
-                "$$ P = V\\,I\\,\\cos\\varphi $$\n\n"
-                "e, em sistemas trifásicos equilibrados:\n\n"
-                "$$ P = \\sqrt{3}\\,V\\,I\\,\\cos\\varphi $$\n\n"
-                "Para motores reais, o rendimento também interfere, pois a potência elétrica absorvida não coincide "
-                "exatamente com a potência mecânica útil. Por isso, em análises mais completas, fator de potência "
-                "e rendimento precisam ser considerados."
-            ),
-        },
-        {
-            "tipo": "video",
-            "url": "https://www.youtube.com/watch?v=aFrag-RGDhQ",
-        },
-        {
-            "tipo": "video",
-            "url": "https://www.youtube.com/watch?v=jzGOUszBHEU",
-        },
-        {
-            "tipo": "texto",
-            "texto": (
-                "No sistema estudado, o motor da bomba constitui a carga principal do circuito. A tensão fornecida "
-                "pela rede e a potência exigida pelo motor determinam a corrente elétrica que circulará nos "
-                "condutores. Essa corrente, ao atravessar cabos com resistência não nula, produz dissipação de "
-                "energia e queda de tensão ao longo do percurso."
-            ),
-        },
-        {
-            "tipo": "texto",
-            "texto": (
-                "Assim, a Lei de Ohm ajuda a interpretar o efeito da resistência dos condutores no comportamento "
-                "do circuito, enquanto a relação entre potência, tensão e corrente permite calcular a solicitação "
-                "elétrica imposta pela carga. Em conjunto, essas duas bases fornecem o ponto de partida para "
-                "avaliar se os condutores de alimentação do motor estão adequadamente dimensionados."
-            ),
-        },
-        {
-            "tipo": "texto",
-            "texto": (
-                "<b>Síntese conceitual</b>\n\n"
-                "A Lei de Ohm relaciona tensão, corrente e resistência. A resistência do condutor depende do "
-                "material, do comprimento e da seção transversal. A potência elétrica, em forma simplificada, "
-                "pode ser expressa por P = VI, permitindo estimar a corrente requerida por uma carga. Em motores, "
-                "fator de potência e rendimento podem precisar ser considerados. Essas relações são a base para "
-                "analisar o circuito de alimentação da bomba."
-            ),
-        },
-    ]
+def _blocos_reforco() -> list[dict[str, Any]]:
+    return REFORCO_BLOCOS.copy()
 
 
-def _blocos_reflexao_final() -> list[dict]:
-    return [
-        {
-            "tipo": "subtitulo",
-            "texto": "Reflexão final",
-        },
-        {
-            "tipo": "alerta",
-            "nivel": "info",
-            "texto": (
-                "Nesta etapa final, suas respostas serão registradas para análise. "
-                "Não será exibido feedback imediato de certo ou errado."
-            ),
-        },
-        {
-            "tipo": "questao_multipla_escolha",
-            "id": Q_F_001,
-            "pergunta": (
-                "A resistência elétrica equivalente de um trecho de circuito é 8 Ω e a corrente que o atravessa "
-                "é 3 A. A tensão elétrica nesse trecho vale:"
-            ),
-            "alternativas": {
-                "a": "11 V",
-                "b": "24 V",
-                "c": "5 V",
-                "d": "0,375 V",
-            },
-            "alternativa_correta": "b",
-        },
-        {
-            "tipo": "questao_multipla_escolha",
-            "id": Q_F_002,
-            "pergunta": (
-                "Um equipamento opera com potência de 1500 W em uma tensão de 127 V, em análise simplificada. "
-                "A corrente aproximada exigida é:"
-            ),
-            "alternativas": {
-                "a": "0,085 A",
-                "b": "8,5 A",
-                "c": "11,8 A",
-                "d": "190,5 A",
-            },
-            "alternativa_correta": "c",
-        },
-    ]
+def _blocos_reflexao_final() -> list[dict[str, Any]]:
+    return REFLEXAO_FINAL_BLOCOS.copy()
 
 
-def get_blocos() -> list[dict]:
-    resultado = _resultado_diagnostico()
+# ============================================================
+# API DO MÓDULO
+# ============================================================
+
+def get_blocos() -> list[dict[str, Any]]:
+    resultado = _resultado_diagnostico(DIAGNOSTICO_QUESTOES)
 
     if not resultado["respondido"]:
-        if resultado["pendentes"] and len(resultado["pendentes"]) < len(DIAG_QUESTOES):
-            return _blocos_diagnostico_pendentes()
-        return _blocos_diagnostico_completo()
+        if resultado["pendentes"] and len(resultado["pendentes"]) < len(DIAGNOSTICO_QUESTOES):
+            return _blocos_diagnostico_pendentes(DIAGNOSTICO_QUESTOES, resultado)
+        return _blocos_diagnostico_completo(DIAGNOSTICO_QUESTOES)
 
     if resultado["acertou_tudo"]:
         return _blocos_sucesso_diagnostico()
 
     return (
-        _blocos_correcao_diagnostico()
+        _blocos_correcao_diagnostico(DIAGNOSTICO_QUESTOES, resultado)
         + _blocos_reforco()
         + _blocos_reflexao_final()
     )
 
 
 def render_controles_especiais() -> None:
-    resultado = _resultado_diagnostico()
+    resultado = _resultado_diagnostico(DIAGNOSTICO_QUESTOES)
 
     if not resultado["respondido"]:
-        if resultado["pendentes"] and len(resultado["pendentes"]) < len(DIAG_QUESTOES):
+        if resultado["pendentes"] and len(resultado["pendentes"]) < len(DIAGNOSTICO_QUESTOES):
             st.info("Diagnóstico em andamento. Responda apenas as questões pendentes.")
         else:
             st.info("Responda às duas questões iniciais. O reforço será liberado automaticamente se necessário.")
