@@ -19,7 +19,7 @@ DIAG_CORRETAS = {
 
 
 def _get_widget_value(question_id: str):
-    return st.session_state.get(f"analise_widget_{question_id}")
+    return st.session_state.get(f"investigacao_widget_{question_id}")
 
 
 def _normalizar_resposta(valor) -> str:
