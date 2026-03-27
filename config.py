@@ -37,7 +37,7 @@ APP_CATALOG = [
         "description": "Explore como sensores, ventilação e controle ambiental são utilizados para monitorar o ambiente do aviário. Investigue como dados e automação contribuem para o bem-estar das aves e a eficiência da produção."
     },
     {
-        "app_id": "app_05",
+        "app_id": "app_30",
         "title": "Backup de Energia em Circuitos Eletrônicos",
         "subtitle": "Energia de Reserva na Prática",
         "card_image": "el001.png",
