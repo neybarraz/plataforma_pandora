@@ -249,7 +249,7 @@ def _hydrate_widgets_from_file(
     saved_answers = _extract_section_answers(data)
 
     for bloco in conteudo["blocos"]:
-        if bloco["tipo"] not in {"questao_texto", "questao_multipla_escolha"}:
+        if bloco["tipo"] not in {"questao_texto", "questao_multipla_escolha", "entrada_numerica_inline",}:
             continue
 
         qid = str(bloco["id"]).strip()
@@ -416,7 +416,7 @@ def _question_blocks_from_conteudo(conteudo: dict[str, Any]) -> list[dict[str, A
     return [
         bloco
         for bloco in conteudo["blocos"]
-        if bloco["tipo"] in {"questao_texto", "questao_multipla_escolha"}
+        if bloco["tipo"] in {"questao_texto", "questao_multipla_escolha", "entrada_numerica_inline"}
     ]
 
 
