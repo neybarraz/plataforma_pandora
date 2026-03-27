@@ -5,7 +5,7 @@ from typing import Any, Dict
 from .config import APP_ID, TABS
 from core.app_data.repo import (
     load_app_user_data,
-    save_app_user_data,
+    # save_app_user_data,
     update_app_user_path,
     update_app_user_question_payload,
 )
@@ -206,13 +206,7 @@ def _normalize_payload(
     return merged
 
 
-def _persist_if_changed(
-    username: str,
-    data: Dict[str, Any],
-    original: Any,
-) -> Dict[str, Any]:
-    if data != original:
-        save_app_user_data(username=username, app_id=APP_ID, payload=data)
+def _persist_if_changed(username: str, data: Dict[str, Any], original: Any,) -> Dict[str, Any]:
     return data
 
 
@@ -223,18 +217,23 @@ def load_user_data(username: str) -> Dict[str, Any]:
 
     if data is None:
         created = empty_payload(username)
-        save_app_user_data(username=username, app_id=APP_ID, payload=created)
+
+        # grava estrutura inicial (uma única vez)
+        update_app_user_path(
+            username=username,
+            app_id=APP_ID,
+            path=["meta", "status"],
+            value="em_andamento",
+        )
+
         return created
 
     normalized = _normalize_payload(username=username, data=data)
     return _persist_if_changed(username=username, data=normalized, original=data)
 
 
-def save_user_data(username: str, data: Dict[str, Any]) -> None:
-    username = _normalize_username(username)
-    normalized = _normalize_payload(username=username, data=data)
-    save_app_user_data(username=username, app_id=APP_ID, payload=normalized)
-
+def save_user_data(*args, **kwargs):
+    raise RuntimeError("save_user_data não deve ser usado. Use update incremental.")
 
 def get_all_responses(username: str) -> Dict[str, Any]:
     username = _normalize_username(username)
