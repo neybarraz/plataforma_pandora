@@ -336,6 +336,7 @@ def _is_catalog_question_block(bloco: dict[str, Any]) -> bool:
     return bool(bloco_id) and bloco_tipo in {
         "questao_texto",
         "questao_multipla_escolha",
+        "entrada_numerica_inline",
     }
 
 
