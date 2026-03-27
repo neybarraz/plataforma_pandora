@@ -2,10 +2,10 @@ from __future__ import annotations
 
 from pathlib import Path
 
-APP_ID = "app_12"
+APP_ID = "app_30"
 
-APP_TITLE = "Sistemas de Bombeamento de Água"
-APP_SUBTITLE = "Soluções em Dimensionamento de Fios"
+APP_TITLE = "Backup de Energia em Circuitos Eletrônicos"
+APP_SUBTITLE = "Energia de Reserva na Prática"
 
 BASE_DIR = Path(__file__).resolve().parent
 QUESTIONS_DIR = BASE_DIR / "questions"
