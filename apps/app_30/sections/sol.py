@@ -26,20 +26,20 @@ ASSETS_DIR = APP_DIR / "assets"
 
 def _inject_visual_css() -> None:
     inject_section_layout_css(
-        prefix="investigacao",
-        topo_class="investigacao-topo",
-        macro_tabs_key="investigacao_macro_tabs",
-        sidebar_key="investigacao_sidebar_buttons",
+        prefix="solucao",
+        topo_class="solucao-topo",
+        macro_tabs_key="solucao_macro_tabs",
+        sidebar_key="solucao_sidebar_buttons",
     )
 
 def _refresh_question_counters(username: str) -> None:
     stats = get_section_stats(username, SECTION_KEY)
-    st.session_state.investigacao_total_questoes = stats["total_questoes"]
-    st.session_state.investigacao_respondidas = stats["respondidas"]
+    st.session_state.solucao_total_questoes = stats["total_questoes"]
+    st.session_state.solucao_respondidas = stats["respondidas"]
 
 def _render_topo() -> None:
     render_topo_html(
-        "investigacao-topo",
+        "solucao-topo",
         """
         sol
         """,
@@ -66,9 +66,9 @@ def _show_image(filename: str, caption: str = "") -> None:
 
 
 def _status_salvamento() -> None:
-    ultimo = st.session_state.get("investigacao_last_save_label", "Ainda não salvo")
-    dirty_ids = set(st.session_state.get("investigacao_dirty_ids", set()))
-    save_error = st.session_state.get("investigacao_save_error", "")
+    ultimo = st.session_state.get("solucao_last_save_label", "Ainda não salvo")
+    dirty_ids = set(st.session_state.get("solucao_dirty_ids", set()))
+    save_error = st.session_state.get("solucao_save_error", "")
 
     if save_error:
         st.error(f"Erro ao salvar: {save_error}")
@@ -105,13 +105,13 @@ def _render_macro_tabs(
         with col:
             if st.button(
                 _normalize_label_for_button(_macro_tab_label(pagina)),
-                key=f"investigacao_macro_tab_{pagina['id']}",
+                key=f"solucao_macro_tab_{pagina['id']}",
                 type="primary" if i == pagina_idx else "secondary",
                 use_container_width=True,
             ):
                 if conteudo_atual is not None:
                     _save_pending_questions(username, conteudo_atual)
-                st.session_state.investigacao_pagina_idx = i
+                st.session_state.solucao_pagina_idx = i
                 st.rerun()
 
 
@@ -168,46 +168,55 @@ def _get_saved_widget_value(item: Any) -> Any:
 
 
 def _ensure_state(username: str) -> None:
-    current_username = st.session_state.get("investigacao_username")
+    current_username = st.session_state.get("solucao_username")
+
     if current_username != username:
-        st.session_state.investigacao_username = username
-        st.session_state.investigacao_dirty_ids = set()
-        st.session_state.investigacao_saved_ids = set()
-        st.session_state.investigacao_last_save_label = "Ainda não salvo"
-        st.session_state.investigacao_save_error = ""
-        st.session_state.investigacao_pagina_idx = 0
-        st.session_state.investigacao_conteudo_idx_por_pagina = {}
-        st.session_state.investigacao_total_questoes = 0
-        st.session_state.investigacao_respondidas = 0
-        st.session_state.investigacao_data_cache = load_user_data(username)
+        st.session_state.solucao_username = username
+        st.session_state.solucao_dirty_ids = set()
+        st.session_state.solucao_saved_ids = set()
+        st.session_state.solucao_last_save_label = "Ainda não salvo"
+        st.session_state.solucao_save_error = ""
+        st.session_state.solucao_pagina_idx = 0
+        st.session_state.solucao_conteudo_idx_por_pagina = {}
+        st.session_state.solucao_total_questoes = 0
+        st.session_state.solucao_respondidas = 0
+
+        data = load_user_data(username)
+        st.session_state.solucao_data_cache = data
+
+        # 🔴 NOVO — hidratação ao trocar usuário
+        _hydrate_widgets_from_file(username, {"blocos": []}, overwrite=True)
 
     defaults = {
-        "investigacao_username": username,
-        "investigacao_dirty_ids": set(),
-        "investigacao_saved_ids": set(),
-        "investigacao_last_save_label": "Ainda não salvo",
-        "investigacao_save_error": "",
-        "investigacao_pagina_idx": 0,
-        "investigacao_conteudo_idx_por_pagina": {},
-        "investigacao_total_questoes": 0,
-        "investigacao_respondidas": 0,
-        "investigacao_data_cache": load_user_data(username),
+        "solucao_username": username,
+        "solucao_dirty_ids": set(),
+        "solucao_saved_ids": set(),
+        "solucao_last_save_label": "Ainda não salvo",
+        "solucao_save_error": "",
+        "solucao_pagina_idx": 0,
+        "solucao_conteudo_idx_por_pagina": {},
+        "solucao_total_questoes": 0,
+        "solucao_respondidas": 0,
+        "solucao_data_cache": load_user_data(username),
     }
 
     for key, value in defaults.items():
         if key not in st.session_state:
             st.session_state[key] = value
 
+    # 🔴 NOVO — hidratação padrão
+    _hydrate_widgets_from_file(username, {"blocos": []})
+
 
 def _ensure_cache_loaded(username: str) -> None:
-    data = st.session_state.get("investigacao_data_cache")
+    data = st.session_state.get("solucao_data_cache")
     if not isinstance(data, dict):
-        st.session_state.investigacao_data_cache = load_user_data(username)
+        st.session_state.solucao_data_cache = load_user_data(username)
 
 
 def _replace_cache_with_data(data: dict[str, Any]) -> None:
     if isinstance(data, dict):
-        st.session_state.investigacao_data_cache = data
+        st.session_state.solucao_data_cache = data
 
 
 def _hydrate_widgets_from_file(
@@ -217,7 +226,7 @@ def _hydrate_widgets_from_file(
     overwrite: bool = False,
 ) -> None:
     _ensure_cache_loaded(username)
-    data = st.session_state.get("investigacao_data_cache", {})
+    data = st.session_state.get("solucao_data_cache", {})
     section_answers = _extract_section_answers(data)
 
     for bloco in conteudo["blocos"]:
@@ -225,7 +234,7 @@ def _hydrate_widgets_from_file(
             continue
 
         qid = str(bloco["id"]).strip()
-        widget_key = f"investigacao_widget_{qid}"
+        widget_key = f"solucao_widget_{qid}"
 
         if qid not in section_answers:
             continue
@@ -244,20 +253,20 @@ def _hydrate_widgets_from_file(
 
 
 def _mark_dirty_question(questao_id: str) -> None:
-    dirty_ids = set(st.session_state.get("investigacao_dirty_ids", set()))
+    dirty_ids = set(st.session_state.get("solucao_dirty_ids", set()))
     dirty_ids.add(questao_id)
-    st.session_state.investigacao_dirty_ids = dirty_ids
-    st.session_state.investigacao_save_error = ""
+    st.session_state.solucao_dirty_ids = dirty_ids
+    st.session_state.solucao_save_error = ""
 
 
 def _clear_dirty_question(questao_id: str) -> None:
-    dirty_ids = set(st.session_state.get("investigacao_dirty_ids", set()))
+    dirty_ids = set(st.session_state.get("solucao_dirty_ids", set()))
     dirty_ids.discard(questao_id)
-    st.session_state.investigacao_dirty_ids = dirty_ids
+    st.session_state.solucao_dirty_ids = dirty_ids
 
 
 def _get_widget_value(questao_id: str, default: Any = "") -> Any:
-    return st.session_state.get(f"investigacao_widget_{questao_id}", default)
+    return st.session_state.get(f"solucao_widget_{questao_id}", default)
 
 
 def _is_catalog_question_block(bloco: dict[str, Any]) -> bool:
@@ -317,16 +326,16 @@ def _save_question(username: str, bloco: dict[str, Any]) -> bool:
 
         _replace_cache_with_data(updated_data)
         _clear_dirty_question(questao_id)
-        st.session_state.investigacao_saved_ids = {questao_id}
-        st.session_state.investigacao_last_save_label = (
+        st.session_state.solucao_saved_ids = {questao_id}
+        st.session_state.solucao_last_save_label = (
             f"Salvo às {datetime.now().strftime('%H:%M:%S')}"
         )
-        st.session_state.investigacao_save_error = ""
+        st.session_state.solucao_save_error = ""
         return True
 
     except Exception as e:
         _mark_dirty_question(questao_id)
-        st.session_state.investigacao_save_error = str(e)
+        st.session_state.solucao_save_error = str(e)
         return False
 
 
@@ -360,16 +369,16 @@ def _save_mcq_on_change(
 
 
 def _get_conteudo_idx_da_pagina(pagina_id: str, total_conteudos: int) -> int:
-    mapa = st.session_state.get("investigacao_conteudo_idx_por_pagina", {})
+    mapa = st.session_state.get("solucao_conteudo_idx_por_pagina", {})
     idx = mapa.get(pagina_id, 0)
     idx = max(0, min(idx, max(total_conteudos - 1, 0)))
     return idx
 
 
 def _set_conteudo_idx_da_pagina(pagina_id: str, idx: int) -> None:
-    mapa = dict(st.session_state.get("investigacao_conteudo_idx_por_pagina", {}))
+    mapa = dict(st.session_state.get("solucao_conteudo_idx_por_pagina", {}))
     mapa[pagina_id] = idx
-    st.session_state.investigacao_conteudo_idx_por_pagina = mapa
+    st.session_state.solucao_conteudo_idx_por_pagina = mapa
 
 
 def _get_paginas_visiveis() -> list[dict[str, Any]]:
@@ -464,7 +473,7 @@ def _render_questao_texto(
     paginas: list[dict[str, Any]],
 ) -> None:
     questao_id = str(bloco["id"]).strip()
-    widget_key = f"investigacao_widget_{questao_id}"
+    widget_key = f"solucao_widget_{questao_id}"
 
     st.markdown(bloco["pergunta"])
 
@@ -488,7 +497,7 @@ def _render_questao_texto(
 
     with col_info:
         saved_data = _extract_section_answers(
-            st.session_state.get("investigacao_data_cache", {})
+            st.session_state.get("solucao_data_cache", {})
         )
         saved_payload = saved_data.get(questao_id, {})
         saved_text = ""
@@ -514,7 +523,7 @@ def _render_questao_multipla_escolha(
     questao_id = str(bloco["id"]).strip()
     alternativas = bloco["alternativas"]
     opcoes = list(alternativas.keys())
-    widget_key = f"investigacao_widget_{questao_id}"
+    widget_key = f"solucao_widget_{questao_id}"
 
     valor_atual = st.session_state.get(widget_key, None)
     if valor_atual not in opcoes:
@@ -553,7 +562,7 @@ def _save_pending_questions(
     username: str,
     conteudo: dict[str, Any],
 ) -> None:
-    dirty_ids = set(st.session_state.get("investigacao_dirty_ids", set()))
+    dirty_ids = set(st.session_state.get("solucao_dirty_ids", set()))
     if not dirty_ids:
         return
 
@@ -569,7 +578,7 @@ def _save_pending_questions(
             saved_ids.add(qid)
 
     if saved_ids:
-        st.session_state.investigacao_saved_ids = saved_ids
+        st.session_state.solucao_saved_ids = saved_ids
 
     _refresh_question_counters(username)
 # ============================================================
@@ -591,14 +600,14 @@ def render(
     paginas = _get_paginas_visiveis()
 
     if not paginas:
-        st.info("Nenhuma página foi configurada para a etapa investigacao.")
+        st.info("Nenhuma página foi configurada para a etapa solucao.")
         return
 
     _refresh_question_counters(username)
 
-    pagina_idx = st.session_state.get("investigacao_pagina_idx", 0)
+    pagina_idx = st.session_state.get("solucao_pagina_idx", 0)
     pagina_idx = max(0, min(pagina_idx, len(paginas) - 1))
-    st.session_state.investigacao_pagina_idx = pagina_idx
+    st.session_state.solucao_pagina_idx = pagina_idx
 
     pagina_atual = paginas[pagina_idx]
     conteudos_da_pagina = pagina_atual.get("conteudos", [])
@@ -618,7 +627,7 @@ def render(
 
     _render_topo()
 
-    with st.container(key="investigacao_macro_tabs"):
+    with st.container(key="solucao_macro_tabs"):
         _render_macro_tabs(
             paginas=paginas,
             pagina_idx=pagina_idx,
@@ -631,13 +640,13 @@ def render(
     col_lateral, col_conteudo = layout_duas_colunas()
 
     with col_lateral:
-        with st.container(key="investigacao_sidebar_buttons"):
+        with st.container(key="solucao_sidebar_buttons"):
             for i, item in enumerate(conteudos_da_pagina):
                 label = _conteudo_label(item)
 
                 if st.button(
                     label,
-                    key=f"investigacao_menu_{pagina_atual['id']}_{item['id']}",
+                    key=f"solucao_menu_{pagina_atual['id']}_{item['id']}",
                     use_container_width=True,
                     type="primary" if i == conteudo_idx else "secondary",
                 ):
