@@ -661,27 +661,28 @@ def _render_bloco(
         _render_questao_multipla_escolha(username, bloco)
         return
 
+    
+    
+
+
     if tipo == "entrada_numerica_inline":
         questao_id = str(bloco["id"]).strip()
         widget_key = f"{SECTION_KEY}_{questao_id}"
 
-        col1, col2, col3 = st.columns([3, 2, 1])
+        col1, col2, col3, col4 = st.columns([3, 2, 1, 1])
 
         with col1:
             st.markdown(f"**{bloco.get('rotulo', '')}:**")
 
-        # 🔧 pegar valor salvo
+        # valor salvo
         data = st.session_state.get("investigacao_data_cache", {})
         saved_answers = _extract_section_answers(data)
         valor_salvo = _get_saved_widget_value(saved_answers.get(questao_id))
 
-        # 🔧 garantir que session_state tenha valor inicial
-        if widget_key not in st.session_state:
-            st.session_state[widget_key] = valor_salvo
-
         with col2:
             valor = st.text_input(
                 label="",
+                value=valor_salvo,
                 key=widget_key,
                 placeholder=bloco.get("placeholder", ""),
                 label_visibility="collapsed",
@@ -690,23 +691,65 @@ def _render_bloco(
         with col3:
             st.markdown(f"**{bloco.get('unidade', '')}**")
 
-        # 🔧 SALVAMENTO CORRETO (detecta mudança real)
-        last_key = f"{widget_key}_last"
-        valor_normalizado = valor if valor is not None else ""
+        status_key = f"{widget_key}_status"
 
-        if st.session_state.get(last_key) != valor_normalizado:
-            st.session_state[last_key] = valor_normalizado
+        with col4:
+            col_btn, col_ok = st.columns([1, 1])
 
-            save_question_response(
-                username=username,
-                section=SECTION_KEY,
-                question_id=questao_id,
-                question_type="texto",
-                pergunta=bloco.get("rotulo", ""),
-                resposta=valor_normalizado,
-            )
+            with col_btn:
+                if st.button(
+                    "✔",
+                    key=f"save_inline_{questao_id}",
+                ):
+                    save_question_response(
+                        username=username,
+                        section=SECTION_KEY,
+                        question_id=questao_id,
+                        question_type="texto",
+                        pergunta=bloco.get("rotulo", ""),
+                        resposta=str(valor).strip(),
+                    )
+
+                    # atualizar cache
+                    data = load_user_data(username)
+                    st.session_state.investigacao_data_cache = data
+
+                    # marcar status com timestamp
+                    st.session_state[status_key] = {
+                        "show": True,
+                        "timestamp": datetime.now().timestamp(),
+                    }
+
+            with col_ok:
+                status = st.session_state.get(status_key, {})
+
+                if not isinstance(status, dict):
+                    status = {}
+                    st.session_state[status_key] = status
+
+                if status.get("show"):
+                    tempo = datetime.now().timestamp() - status.get("timestamp", 0)
+
+                    if tempo < 2:
+                        st.markdown(
+                            "<span style='color: #2ecc71; font-size: 14px;'>ok</span>",
+                            unsafe_allow_html=True,
+                        )
+                    else:
+                        st.session_state[status_key] = {"show": False}
 
         return
+
+
+
+
+
+
+
+
+
+
+
     
     if tipo == "equacao":
         st.latex(bloco.get("latex", ""))
