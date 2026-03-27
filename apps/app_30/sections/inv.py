@@ -669,6 +669,15 @@ def _render_bloco(
         with col1:
             st.markdown(f"**{bloco.get('rotulo', '')}:**")
 
+        # 🔧 pegar valor salvo
+        data = st.session_state.get("investigacao_data_cache", {})
+        saved_answers = _extract_section_answers(data)
+        valor_salvo = _get_saved_widget_value(saved_answers.get(questao_id))
+
+        # 🔧 garantir que session_state tenha valor inicial
+        if widget_key not in st.session_state:
+            st.session_state[widget_key] = valor_salvo
+
         with col2:
             valor = st.text_input(
                 label="",
@@ -680,9 +689,8 @@ def _render_bloco(
         with col3:
             st.markdown(f"**{bloco.get('unidade', '')}**")
 
-        # 🔧 SALVAMENTO CORRETO (detecta mudança)
+        # 🔧 SALVAMENTO CORRETO (detecta mudança real)
         last_key = f"{widget_key}_last"
-
         valor_normalizado = valor if valor is not None else ""
 
         if st.session_state.get(last_key) != valor_normalizado:
