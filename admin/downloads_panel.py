@@ -6,8 +6,6 @@ from datetime import datetime
 
 import pandas as pd
 import streamlit as st
-from core.db.conn import get_conn
-import json
 
 from config import ADMIN_USERNAME, APP_CATALOG
 from admin.download_utils import (
@@ -17,37 +15,6 @@ from admin.download_utils import (
     list_response_files,
 )
 
-
-def get_app_data_from_db(app_id: str):
-    conn = get_conn()
-    cur = conn.cursor()
-
-    if "psycopg" in str(type(conn)):
-        cur.execute(
-            "SELECT username, payload FROM app_user_data WHERE app_id = %s",
-            (app_id,)
-        )
-        rows = cur.fetchall()
-    else:
-        cur.execute(
-            "SELECT username, payload FROM app_user_data WHERE app_id = ?",
-            (app_id,)
-        )
-        rows = cur.fetchall()
-
-    result = []
-
-    for row in rows:
-        username = row["username"] if isinstance(row, dict) else row[0]
-        payload = row["payload"] if isinstance(row, dict) else row[1]
-
-        result.append({
-            "username": username,
-            "data": payload
-        })
-
-    conn.close()
-    return result
 
 def _get_auth_username() -> str | None:
     auth_user = st.session_state.get("auth_user")
@@ -164,21 +131,7 @@ def downloads_panel() -> None:
         return
 
     st.markdown(f"### App selecionado: `{app_id}`")
-    # NOVO: leitura direto do banco
-    data_db = get_app_data_from_db(app_id)
 
-    if data_db:
-        json_str = json.dumps(data_db, indent=2, ensure_ascii=False)
-
-        st.download_button(
-            label="⬇️ Baixar dados do banco (JSON)",
-            data=json_str,
-            file_name=f"{app_id}_dados.json",
-            mime="application/json",
-            use_container_width=True,
-        )
-    else:
-        st.warning("Nenhum registro encontrado no banco para este app.")
     col_a, col_b = st.columns([1, 1])
 
     with col_a:
