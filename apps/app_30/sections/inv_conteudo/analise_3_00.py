@@ -135,7 +135,7 @@ def get_blocos() -> list[dict]:
 
         {
             "tipo": "entrada_numerica_inline",
-            "id": "investigacao.03.000.0001",
+            "id": "investigacao.03.000.0004",
             "rotulo": "Tensão inicial da bateria",
             "unidade": "V",
             "placeholder": "Ex: 3.65"
@@ -143,7 +143,7 @@ def get_blocos() -> list[dict]:
 
         {
             "tipo": "entrada_numerica_inline",
-            "id": "investigacao.03.000.0002",
+            "id": "investigacao.03.000.0005",
             "rotulo": "Corrente inicial de carga",
             "unidade": "A",
             "placeholder": "Ex: 0.85"
@@ -156,7 +156,7 @@ def get_blocos() -> list[dict]:
 
         {
             "tipo": "entrada_numerica_inline",
-            "id": "investigacao.03.000.0003",
+            "id": "investigacao.03.000.0006",
             "rotulo": "Tensão após alguns minutos",
             "unidade": "V",
             "placeholder": "Ex: 3.78"
@@ -164,7 +164,7 @@ def get_blocos() -> list[dict]:
 
         {
             "tipo": "entrada_numerica_inline",
-            "id": "investigacao.03.000.0004",
+            "id": "investigacao.03.000.0007",
             "rotulo": "Corrente após alguns minutos",
             "unidade": "A",
             "placeholder": "Ex: 0.82"
