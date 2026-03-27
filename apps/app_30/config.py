@@ -16,9 +16,9 @@ RESPONSES_DIR = BASE_DIR / "data" / "responses"
 
 TABS = [
     # {"key": "visao_geral", "label": "Disciplina"},
-    {"key": "problema", "label": "Elétrico"},
+    # {"key": "problema", "label": "Elétrico"},
     {"key": "investigacao", "label": "Circuitos"},
-    {"key": "solucao", "label": "Magnetismo"},
+    # {"key": "solucao", "label": "Magnetismo"},
 ]
 
 TAB_KEYS = [tab["key"] for tab in TABS]
