@@ -680,14 +680,21 @@ def _render_bloco(
         with col3:
             st.markdown(f"**{bloco.get('unidade', '')}**")
 
-        if valor:
+        # 🔧 SALVAMENTO CORRETO (detecta mudança)
+        last_key = f"{widget_key}_last"
+
+        valor_normalizado = valor if valor is not None else ""
+
+        if st.session_state.get(last_key) != valor_normalizado:
+            st.session_state[last_key] = valor_normalizado
+
             save_question_response(
                 username=username,
                 section=SECTION_KEY,
                 question_id=questao_id,
                 question_type="texto",
                 pergunta=bloco.get("rotulo", ""),
-                resposta=valor,
+                resposta=valor_normalizado,
             )
 
         return
