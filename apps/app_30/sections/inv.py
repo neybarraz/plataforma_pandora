@@ -177,6 +177,7 @@ def _get_saved_widget_value(item: Any) -> Any:
 
 def _ensure_state(username: str) -> None:
     current_username = st.session_state.get("investigacao_username")
+
     if current_username != username:
         st.session_state.investigacao_username = username
         st.session_state.investigacao_dirty_ids = set()
@@ -187,7 +188,12 @@ def _ensure_state(username: str) -> None:
         st.session_state.investigacao_conteudo_idx_por_pagina = {}
         st.session_state.investigacao_total_questoes = 0
         st.session_state.investigacao_respondidas = 0
-        st.session_state.investigacao_data_cache = load_user_data(username)
+
+        data = load_user_data(username)
+        st.session_state.investigacao_data_cache = data
+
+        # 🔴 NOVO — hidratar widgets ao trocar usuário
+        _hydrate_all_widgets_from_cache(username, overwrite=True)
 
     defaults = {
         "investigacao_username": username,
@@ -205,6 +211,9 @@ def _ensure_state(username: str) -> None:
     for key, value in defaults.items():
         if key not in st.session_state:
             st.session_state[key] = value
+
+    # 🔴 NOVO — garante hidratação mesmo sem troca de usuário
+    _hydrate_all_widgets_from_cache(username)
 
 
 def _ensure_cache_loaded(username: str) -> None:
