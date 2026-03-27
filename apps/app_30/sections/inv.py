@@ -9,7 +9,6 @@ import streamlit as st
 from .inv_conteudo.inv_catalago import get_paginas
 from .inv_conteudo.simulador_3_01 import render_simulador_tp4056
 from ..storage import load_user_data, save_question_response, get_section_stats
-from ..storage import get_section_responses
 from ..ui.layout import (
     inject_section_layout_css,
     layout_duas_colunas,
@@ -227,10 +226,11 @@ def _replace_cache_with_data(data: dict[str, Any]) -> None:
         st.session_state.investigacao_data_cache = data
 
 def _hydrate_all_widgets_from_cache(username: str, *, overwrite: bool = False) -> None:
-    saved_answers = get_section_responses(username, SECTION_KEY)
+    data = st.session_state.get("investigacao_data_cache", {})
+    saved_answers = _extract_section_answers(data)
 
     for qid, payload in saved_answers.items():
-        widget_key = f"investigacao_widget_{str(qid).strip()}"
+        widget_key = f"{SECTION_KEY}_{str(qid).strip()}"
 
         if (not overwrite) and (widget_key in st.session_state):
             continue
@@ -245,14 +245,15 @@ def _hydrate_widgets_from_file(
     *,
     overwrite: bool = False,
 ) -> None:
-    saved_answers = get_section_responses(username, SECTION_KEY)
+    data = st.session_state.get("investigacao_data_cache", {})
+    saved_answers = _extract_section_answers(data)
 
     for bloco in conteudo["blocos"]:
         if bloco["tipo"] not in {"questao_texto", "questao_multipla_escolha"}:
             continue
 
         qid = str(bloco["id"]).strip()
-        widget_key = f"investigacao_widget_{qid}"
+        widget_key = f"{SECTION_KEY}_{qid}"
 
         if qid not in saved_answers:
             continue
@@ -288,7 +289,7 @@ def _clear_dirty_question(questao_id: str) -> None:
 
 
 def _get_widget_value(questao_id: str, default: Any = "") -> Any:
-    return st.session_state.get(f"investigacao_widget_{questao_id}", default)
+    return st.session_state.get(f"{SECTION_KEY}_{questao_id}", default)
 
 
 # ============================================================
@@ -470,16 +471,23 @@ def _render_questao_texto(
     bloco: dict[str, Any],
 ) -> None:
     questao_id = str(bloco["id"]).strip()
-    widget_key = f"investigacao_widget_{questao_id}"
 
     st.markdown(bloco["pergunta"])
 
+
+    widget_key = f"{SECTION_KEY}_{questao_id}"
+
+    # pegar dados salvos
+    data = st.session_state.get("investigacao_data_cache", {})
+    saved_answers = _extract_section_answers(data)
+    valor = _get_saved_widget_value(saved_answers.get(questao_id))
+
     st.text_area(
         label="Sua resposta",
+        value=valor,
         key=widget_key,
         height=bloco.get("altura", 160),
         placeholder=bloco.get("placeholder", ""),
-        label_visibility="visible",
     )
 
     col_save, col_info = st.columns([1.2, 3.8], gap="small")
@@ -493,7 +501,8 @@ def _render_questao_texto(
             _save_text_question_from_button(username, bloco)
 
     with col_info:
-        saved_answers = get_section_responses(username, SECTION_KEY)
+        data = st.session_state.get("investigacao_data_cache", {})
+        saved_answers = _extract_section_answers(data)
         saved_payload = saved_answers.get(questao_id, {})
         saved_text = ""
 
@@ -516,11 +525,16 @@ def _render_questao_multipla_escolha(
     questao_id = str(bloco["id"]).strip()
     alternativas = bloco["alternativas"]
     opcoes = list(alternativas.keys())
-    widget_key = f"investigacao_widget_{questao_id}"
 
-    valor_atual = st.session_state.get(widget_key, None)
-    if valor_atual not in opcoes:
-        st.session_state[widget_key] = None
+    widget_key = f"{SECTION_KEY}_{questao_id}"
+
+    # pegar valor salvo
+    data = st.session_state.get("investigacao_data_cache", {})
+    saved_answers = _extract_section_answers(data)
+    valor = _get_saved_widget_value(saved_answers.get(questao_id))
+
+    if valor not in opcoes:
+        valor = None
 
     st.markdown(bloco["pergunta"])
 
@@ -532,11 +546,10 @@ def _render_questao_multipla_escolha(
         options=opcoes,
         format_func=_fmt,
         key=widget_key,
-        index=None,
+        index=opcoes.index(valor) if valor in opcoes else None,
         horizontal=False,
         on_change=_save_mcq_on_change,
         args=(username, bloco),
-        label_visibility="visible",
     )
 
 
@@ -649,7 +662,7 @@ def _render_bloco(
 
     if tipo == "entrada_numerica_inline":
         questao_id = str(bloco["id"]).strip()
-        widget_key = f"investigacao_widget_{questao_id}"
+        widget_key = f"{SECTION_KEY}_{questao_id}"
 
         col1, col2, col3 = st.columns([3, 2, 1])
 
