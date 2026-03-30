@@ -16,7 +16,7 @@ APP_CATALOG = [
         "description": "Investigue como temperatura, umidade e ventilação interagem para definir o conforto térmico em ambientes reais. Analise dados ambientais e compreenda, na prática, os mecanismos de transferência de calor que afetam o bem-estar das pessoas."
     },
     {
-        "app_id": "app_02",
+        "app_id": "app_31",
         "title": "Sistemas de Bombeamento de Água",
         "subtitle": "Eletricidade Aplicada",
         "card_image": "ba001.png",
