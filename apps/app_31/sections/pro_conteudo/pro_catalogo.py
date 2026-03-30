@@ -18,11 +18,11 @@ def get_paginas() -> list[dict[str, Any]]:
         {"id": "pagina_1", "titulo_menu": "Dimensionamento dos Condutores", "conteudos": [
             _build_conteudo("b01_01_01", "Levantamento de dados de campo",            b01_01_01),
             _build_conteudo("b01_01_02", "Cálculo da Corrente de Projeto",      b01_01_02),
-            _build_conteudo("b01_01_03", "Dimensionamento Normativo (NBR 5410)",            b01_01_03),
-            _build_conteudo("b01_01_04", "Modelo Físico",                b01_01_04),
-            _build_conteudo("b01_01_05", "Modelo Matemático",                b01_01_05),
-            _build_conteudo("b01_01_06", "Interpretação Técnica",                b01_01_06),
-            _build_conteudo("b01_01_07", "Limites e Conclusão",                b01_01_07),
+            # _build_conteudo("b01_01_03", "Dimensionamento Normativo (NBR 5410)",            b01_01_03),
+            # _build_conteudo("b01_01_04", "Modelo Físico",                b01_01_04),
+            # _build_conteudo("b01_01_05", "Modelo Matemático",                b01_01_05),
+            # _build_conteudo("b01_01_06", "Interpretação Técnica",                b01_01_06),
+            # _build_conteudo("b01_01_07", "Limites e Conclusão",                b01_01_07),
         ]},
         # {"id": "pagina_2", "titulo_menu": "Campo elétrico", "conteudos": [
         #     _build_conteudo("conteudo_2_01", "O que existe no espaço ao redor da carga?", conteudo_2_01),
