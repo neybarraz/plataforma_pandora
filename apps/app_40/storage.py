@@ -88,6 +88,7 @@ def save_question_response(
     pergunta: str,
     resposta: Any = "",
     alternativas: dict[str, Any] | None = None,
+    alternativa_correta: str = "",
 ) -> Dict[str, Any]:
 
     username = _normalize_username(username)
@@ -123,6 +124,7 @@ def save_question_response(
         payload["resposta_escolhida"] = (
             "" if resposta is None else str(resposta).strip()
         )
+        payload["alternativa_correta"] = str(alternativa_correta).strip()
         payload["alternativa_correta"] = str(
             kwargs.get("alternativa_correta", "")
         ).strip()
