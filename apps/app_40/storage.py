@@ -101,15 +101,6 @@ def save_question_response(
     if not pergunta:
         pergunta = ""
 
-    # =========================
-    # GARANTIR REGISTRO BASE (🔥 FIX RENDER)
-    # =========================
-
-    data = load_user_data(username)
-
-    if not data or "responses" not in data:
-        data = _empty_payload(username)
-        save_app_user_data(username=username, app_id=APP_ID, payload=data)
 
     # =========================
     # PAYLOAD
