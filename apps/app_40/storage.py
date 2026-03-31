@@ -8,7 +8,6 @@ from core.app_data.repo import (
     update_app_user_question_payload,
 )
 
-
 # =========================
 # BASE
 # =========================
@@ -28,6 +27,18 @@ def _normalize_section(section: str) -> str:
 
 
 # =========================
+# PAYLOAD BASE
+# =========================
+
+def _empty_payload(username: str) -> Dict[str, Any]:
+    return {
+        "app_id": APP_ID,
+        "username": username,
+        "responses": {},  # dinâmico agora
+    }
+
+
+# =========================
 # LOAD / SAVE
 # =========================
 
@@ -36,13 +47,15 @@ def load_user_data(username: str) -> Dict[str, Any]:
 
     data = load_app_user_data(username=username, app_id=APP_ID)
 
+    # 🔴 se não existe → cria
     if not isinstance(data, dict):
-        data = {
-            "app_id": APP_ID,
-            "username": username,
-            "responses": {},
-        }
+        data = _empty_payload(username)
         save_app_user_data(username=username, app_id=APP_ID, payload=data)
+        return data
+
+    # 🔴 garantir estrutura mínima
+    if "responses" not in data or not isinstance(data["responses"], dict):
+        data["responses"] = {}
 
     return data
 
@@ -57,7 +70,9 @@ def get_section_responses(username: str, section: str) -> Dict[str, Any]:
     if not isinstance(responses, dict):
         return {}
 
-    return responses.get(section, {})
+    section_data = responses.get(section, {})
+
+    return section_data if isinstance(section_data, dict) else {}
 
 
 # =========================
@@ -82,20 +97,39 @@ def save_question_response(
     if not question_id:
         raise ValueError("question_id é obrigatório.")
 
+    if not pergunta:
+        pergunta = ""
+
+    # =========================
+    # PAYLOAD
+    # =========================
+
     payload: Dict[str, Any] = {
-        "tipo": question_type,
+        "tipo": str(question_type).strip(),
         "pergunta": str(pergunta).strip(),
     }
 
+    # -------------------------
+    # TEXTO
+    # -------------------------
     if question_type == "texto":
         payload["resposta"] = "" if resposta is None else str(resposta).strip()
 
+    # -------------------------
+    # MÚLTIPLA ESCOLHA
+    # -------------------------
     elif question_type == "multipla_escolha":
         payload["alternativas"] = alternativas or {}
-        payload["resposta_escolhida"] = "" if resposta is None else str(resposta).strip()
+        payload["resposta_escolhida"] = (
+            "" if resposta is None else str(resposta).strip()
+        )
 
     else:
         raise ValueError(f"Tipo inválido: {question_type}")
+
+    # =========================
+    # SAVE (CORE)
+    # =========================
 
     updated = update_app_user_question_payload(
         username=username,
@@ -104,5 +138,9 @@ def save_question_response(
         question_id=question_id,
         payload=payload,
     )
+
+    # 🔴 garantir estrutura consistente no retorno
+    if not isinstance(updated, dict):
+        updated = load_user_data(username)
 
     return updated
