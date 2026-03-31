@@ -18,8 +18,6 @@ def run_engine(username: str):
     st.write("🚀 Novo motor ativo")
     st.write(f"Usuário: {username}")
 
-    import os
-    st.write("DEBUG DATABASE_URL:", os.getenv("DATABASE_URL"))
     from ..storage import load_user_data
 
     st.write("DEBUG STORAGE:")
@@ -135,14 +133,12 @@ def run_engine(username: str):
                 widget_key = f"engine_{full_id}"
 
                 item = responses.get(full_id, {})
+                valor_salvo = item.get("resposta", "")
 
-                if item.get("tipo") == "multipla_escolha":
-                    valor_salvo = item.get("resposta_escolhida", "")
-                else:
-                    valor_salvo = item.get("resposta", "")
-
-                # 🔥 hidratação correta
+                # 🔥 hidratação correta (sem sobrescrever input do usuário)
                 if widget_key not in st.session_state:
+                    st.session_state[widget_key] = valor_salvo
+                elif st.session_state[widget_key] == "":
                     st.session_state[widget_key] = valor_salvo
 
                 st.text_area(
@@ -159,7 +155,6 @@ def run_engine(username: str):
                         pergunta=bloco.get("pergunta", ""),
                         resposta=st.session_state[widget_key],
                     )
-
                     st.success("Salvo!")
 
             # -------------------------
@@ -175,17 +170,13 @@ def run_engine(username: str):
                 widget_key = f"engine_{full_id}"
 
                 item = responses.get(full_id, {})
+                valor_salvo = item.get("resposta_escolhida", "")
 
-                if item.get("tipo") == "multipla_escolha":
-                    valor_salvo = item.get("resposta_escolhida", "")
-                else:
-                    valor_salvo = item.get("resposta", "")
+                valor_corrigido = valor_salvo if valor_salvo in opcoes else opcoes[0]
 
+                # 🔥 hidratação correta
                 if widget_key not in st.session_state:
-                    if valor_salvo in opcoes:
-                        st.session_state[widget_key] = valor_salvo
-                    else:
-                        st.session_state[widget_key] = opcoes[0]
+                    st.session_state[widget_key] = valor_corrigido
 
                 st.radio(
                     bloco.get("pergunta", ""),
