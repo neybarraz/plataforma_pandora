@@ -83,7 +83,6 @@ def save_question_response(
         raise ValueError("question_id é obrigatório.")
 
     payload: Dict[str, Any] = {
-        "question_id": question_id,
         "tipo": question_type,
         "pergunta": str(pergunta).strip(),
     }
@@ -93,7 +92,7 @@ def save_question_response(
 
     elif question_type == "multipla_escolha":
         payload["alternativas"] = alternativas or {}
-        payload["resposta"] = "" if resposta is None else str(resposta).strip()
+        payload["resposta_escolhida"] = "" if resposta is None else str(resposta).strip()
 
     else:
         raise ValueError(f"Tipo inválido: {question_type}")
