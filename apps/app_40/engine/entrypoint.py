@@ -69,11 +69,10 @@ def run_engine(username: str):
     # NODE ATIVO
     # =========================
 
-    node_id = st.session_state.get("node_id")
+    if "node_id" not in st.session_state:
+        st.session_state["node_id"] = f"{m_key}.{s_key}.{c_key}.{b_keys[0]}"
 
-    if not node_id:
-        node_id = f"{m_key}.{s_key}.{c_key}.{b_keys[0]}"
-        st.session_state["node_id"] = node_id
+    node_id = st.session_state["node_id"]
 
     m_key, s_key, c_key, b_key = node_id.split(".")
     conteudo = tree[m_key][s_key][c_key][b_key]
@@ -84,11 +83,13 @@ def run_engine(username: str):
 
     col_menu, col_content = st.columns([1, 3])
 
+    # =========================
     # MENU ESQUERDA
+    # =========================
+
     with col_menu:
         for b in b_keys:
             node = f"{m_key}.{s_key}.{c_key}.{b}"
-
             is_active = st.session_state.get("node_id") == node
 
             label = LABELS.get(b, b)
@@ -98,7 +99,10 @@ def run_engine(username: str):
                 st.session_state["node_id"] = node
                 st.rerun()
 
-    # CONTEÚDO DIREITA
+    # =========================
+    # CONTEÚDO
+    # =========================
+
     with col_content:
         st.write(f"📍 Caminho: {node_id}")
 
@@ -108,21 +112,31 @@ def run_engine(username: str):
 
             tipo = bloco.get("tipo")
 
+            # -------------------------
+            # TEXTO
+            # -------------------------
             if tipo == "texto":
                 st.write(bloco.get("texto", ""))
 
+            # -------------------------
+            # QUESTÃO TEXTO
+            # -------------------------
             elif tipo == "questao_texto":
                 qid = bloco.get("id", "q")
 
                 full_id = f"{node_id}.{qid}"
+                widget_key = f"engine_{full_id}"
+
                 valor_salvo = responses.get(full_id, {}).get("resposta", "")
 
-                resposta = st.text_area(
-                    bloco.get("pergunta", ""),
-                    value=valor_salvo,
-                    key=f"input_{full_id}"
-                )
+                # 🔥 hidratação correta
+                if widget_key not in st.session_state:
+                    st.session_state[widget_key] = valor_salvo
 
+                st.text_area(
+                    bloco.get("pergunta", ""),
+                    key=widget_key
+                )
 
                 if st.button("💾 Salvar", key=f"save_{full_id}"):
 
@@ -130,11 +144,14 @@ def run_engine(username: str):
                         username=username,
                         node_id=node_id,
                         question_id=qid,
-                        value=resposta,
+                        value=st.session_state[widget_key],
                     )
 
                     st.success("Salvo!")
 
+            # -------------------------
+            # MÚLTIPLA ESCOLHA
+            # -------------------------
             elif tipo == "questao_multipla_escolha":
                 qid = bloco.get("id", "q")
 
@@ -142,14 +159,21 @@ def run_engine(username: str):
                 opcoes = list(alternativas.keys())
 
                 full_id = f"{node_id}.{qid}"
+                widget_key = f"engine_{full_id}"
+
                 valor_salvo = responses.get(full_id, {}).get("resposta", "")
 
-                escolha = st.radio(
+                if widget_key not in st.session_state:
+                    if valor_salvo in opcoes:
+                        st.session_state[widget_key] = valor_salvo
+                    else:
+                        st.session_state[widget_key] = opcoes[0]
+
+                st.radio(
                     bloco.get("pergunta", ""),
                     opcoes,
-                    index=opcoes.index(valor_salvo) if valor_salvo in opcoes else 0,
                     format_func=lambda x: alternativas[x],
-                    key=f"radio_{full_id}"
+                    key=widget_key
                 )
 
                 if st.button("💾 Salvar", key=f"save_{full_id}"):
@@ -158,10 +182,13 @@ def run_engine(username: str):
                         username=username,
                         node_id=node_id,
                         question_id=qid,
-                        value=escolha,
+                        value=st.session_state[widget_key],
                     )
 
                     st.success("Salvo!")
 
+            # -------------------------
+            # OUTROS
+            # -------------------------
             else:
                 st.warning(f"Tipo não suportado: {tipo}")
