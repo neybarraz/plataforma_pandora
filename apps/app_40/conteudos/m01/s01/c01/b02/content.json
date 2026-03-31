@@ -1,0 +1,23 @@
+{
+  "blocos": [
+    {
+      "tipo": "texto",
+      "texto": "Vamos analisar o sistema"
+    },
+    {
+      "tipo": "questao_texto",
+      "id": "q001",
+      "pergunta": "Qual o problema identificado?"
+    },
+    {
+      "tipo": "questao_multipla_escolha",
+      "id": "q002",
+      "pergunta": "Qual a causa provável?",
+      "alternativas": {
+        "a": "Sobrecarga",
+        "b": "Queda de tensão",
+        "c": "Erro de instalação"
+      }
+    }
+  ]
+}

@@ -1,0 +1,160 @@
+import streamlit as st
+from .content_loader import load_tree
+from .storage_adapter import save_answer
+from ..storage import get_section_responses
+
+
+LABELS = {
+    "m01": "Motor Elétrico",
+    "m02": "Proteção",
+    "s01": "Corrente",
+    "s02": "Tensão",
+    "b01": "Introdução",
+    "b02": "Exercícios",
+}
+
+
+def run_engine(username: str):
+    st.write("🚀 Novo motor ativo")
+    st.write(f"Usuário: {username}")
+
+    tree = load_tree()
+
+    if not tree:
+        st.warning("Nenhum conteúdo encontrado em /conteudos")
+        return
+
+    # =========================
+    # MENU 1 — MÓDULOS
+    # =========================
+
+    m_keys = sorted(tree.keys())
+    cols = st.columns(len(m_keys))
+
+    for i, m in enumerate(m_keys):
+        label = LABELS.get(m, m)
+
+        if cols[i].button(label, key=f"m_{m}", use_container_width=True):
+            st.session_state["m_key"] = m
+
+    m_key = st.session_state.get("m_key", m_keys[0])
+
+    # =========================
+    # MENU 2 — SUBMÓDULO
+    # =========================
+
+    s_keys = list(tree[m_key].keys())
+
+    if len(s_keys) > 1:
+        cols = st.columns(len(s_keys))
+
+        for i, s in enumerate(s_keys):
+            label = LABELS.get(s, s)
+
+            if cols[i].button(label, key=f"s_{m_key}_{s}", use_container_width=True):
+                st.session_state["s_key"] = s
+
+        s_key = st.session_state.get("s_key", s_keys[0])
+    else:
+        s_key = s_keys[0]
+
+    # =========================
+    # BASE
+    # =========================
+
+    c_key = list(tree[m_key][s_key].keys())[0]
+    b_keys = list(tree[m_key][s_key][c_key].keys())
+
+    # =========================
+    # NODE ATIVO
+    # =========================
+
+    node_id = st.session_state.get("node_id")
+
+    if not node_id:
+        node_id = f"{m_key}.{s_key}.{c_key}.{b_keys[0]}"
+        st.session_state["node_id"] = node_id
+
+    m_key, s_key, c_key, b_key = node_id.split(".")
+    conteudo = tree[m_key][s_key][c_key][b_key]
+
+    # =========================
+    # LAYOUT
+    # =========================
+
+    col_menu, col_content = st.columns([1, 3])
+
+    # MENU ESQUERDA
+    with col_menu:
+        for b in b_keys:
+            node = f"{m_key}.{s_key}.{c_key}.{b}"
+
+            is_active = st.session_state.get("node_id") == node
+
+            label = LABELS.get(b, b)
+            label = f"➡️ {label}" if is_active else label
+
+            if st.button(label, key=f"b_{node}", use_container_width=True):
+                st.session_state["node_id"] = node
+                st.rerun()
+
+    # CONTEÚDO DIREITA
+    with col_content:
+        st.write(f"📍 Caminho: {node_id}")
+
+        responses = get_section_responses(username, "engine")
+
+        for bloco in conteudo.get("blocos", []):
+
+            tipo = bloco.get("tipo")
+
+            if tipo == "texto":
+                st.write(bloco.get("texto", ""))
+
+            elif tipo == "questao_texto":
+                qid = bloco.get("id", "q")
+
+                full_id = f"{node_id}.{qid}"
+                valor_salvo = responses.get(full_id, {}).get("resposta", "")
+
+                resposta = st.text_area(
+                    bloco.get("pergunta", ""),
+                    value=valor_salvo,
+                    key=full_id
+                )
+
+                if resposta != valor_salvo:
+                    save_answer(
+                        username=username,
+                        node_id=node_id,
+                        question_id=qid,
+                        value=resposta,
+                    )
+
+            elif tipo == "questao_multipla_escolha":
+                qid = bloco.get("id", "q")
+
+                alternativas = bloco.get("alternativas", {})
+                opcoes = list(alternativas.keys())
+
+                full_id = f"{node_id}.{qid}"
+                valor_salvo = responses.get(full_id, {}).get("resposta", "")
+
+                escolha = st.radio(
+                    bloco.get("pergunta", ""),
+                    opcoes,
+                    index=opcoes.index(valor_salvo) if valor_salvo in opcoes else 0,
+                    format_func=lambda x: alternativas[x],
+                    key=full_id
+                )
+
+                if escolha != valor_salvo:
+                    save_answer(
+                        username=username,
+                        node_id=node_id,
+                        question_id=qid,
+                        value=escolha,
+                    )
+
+            else:
+                st.warning(f"Tipo não suportado: {tipo}")
