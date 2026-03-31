@@ -106,7 +106,7 @@ def save_question_response(
     # =========================
 
     payload: Dict[str, Any] = {
-        "tipo": str(question_type).strip(),
+        "tipo": str(question_type).strip().lower(),
         "pergunta": str(pergunta).strip(),
     }
 
@@ -120,14 +120,13 @@ def save_question_response(
     # MÚLTIPLA ESCOLHA
     # -------------------------
     elif question_type == "multipla_escolha":
-        payload["alternativas"] = alternativas or {}
+        if not isinstance(alternativas, dict):
+            alternativas = {}
+        payload["alternativas"] = alternativas
         payload["resposta_escolhida"] = (
             "" if resposta is None else str(resposta).strip()
         )
         payload["alternativa_correta"] = str(alternativa_correta).strip()
-        payload["alternativa_correta"] = str(
-            kwargs.get("alternativa_correta", "")
-        ).strip()
 
     else:
         raise ValueError(f"Tipo inválido: {question_type}")
