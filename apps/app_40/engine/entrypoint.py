@@ -120,16 +120,20 @@ def run_engine(username: str):
                 resposta = st.text_area(
                     bloco.get("pergunta", ""),
                     value=valor_salvo,
-                    key=full_id
+                    key=f"input_{full_id}"
                 )
 
-                if resposta != valor_salvo:
+
+                if st.button("💾 Salvar", key=f"save_{full_id}"):
+
                     save_answer(
                         username=username,
                         node_id=node_id,
                         question_id=qid,
                         value=resposta,
                     )
+
+                    st.success("Salvo!")
 
             elif tipo == "questao_multipla_escolha":
                 qid = bloco.get("id", "q")
@@ -145,16 +149,19 @@ def run_engine(username: str):
                     opcoes,
                     index=opcoes.index(valor_salvo) if valor_salvo in opcoes else 0,
                     format_func=lambda x: alternativas[x],
-                    key=full_id
+                    key=f"radio_{full_id}"
                 )
 
-                if escolha != valor_salvo:
+                if st.button("💾 Salvar", key=f"save_{full_id}"):
+
                     save_answer(
                         username=username,
                         node_id=node_id,
                         question_id=qid,
                         value=escolha,
                     )
+
+                    st.success("Salvo!")
 
             else:
                 st.warning(f"Tipo não suportado: {tipo}")
