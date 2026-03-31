@@ -18,6 +18,11 @@ def run_engine(username: str):
     st.write("🚀 Novo motor ativo")
     st.write(f"Usuário: {username}")
 
+    from ..storage import load_user_data
+
+    st.write("DEBUG STORAGE:")
+    st.write(load_user_data(username))
+
     tree = load_tree()
 
     if not tree:
@@ -106,7 +111,7 @@ def run_engine(username: str):
     with col_content:
         st.write(f"📍 Caminho: {node_id}")
 
-        responses = get_section_responses(username, "engine")
+        responses = get_section_responses(username, "problema")
 
         for bloco in conteudo.get("blocos", []):
 
