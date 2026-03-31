@@ -18,6 +18,8 @@ def run_engine(username: str):
     st.write("🚀 Novo motor ativo")
     st.write(f"Usuário: {username}")
 
+    import os
+    st.write("DEBUG DATABASE_URL:", os.getenv("DATABASE_URL"))
     from ..storage import load_user_data
 
     st.write("DEBUG STORAGE:")
