@@ -11,11 +11,6 @@ DATABASE_URL = os.getenv("DATABASE_URL", "").strip()
 def using_postgres() -> bool:
     return bool(DATABASE_URL)
 
-import streamlit as st
-import os
-st.write("DEBUG DATABASE_URL:", os.getenv("DATABASE_URL"))
-
-
 def _ensure_db_dir():
     db_dir = os.path.dirname(DATABASE_PATH)
     if db_dir:
