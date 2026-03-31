@@ -34,7 +34,7 @@ def _empty_payload(username: str) -> Dict[str, Any]:
     return {
         "app_id": APP_ID,
         "username": username,
-        "responses": {},  # dinâmico agora
+        "responses": {},
     }
 
 
@@ -102,6 +102,16 @@ def save_question_response(
         pergunta = ""
 
     # =========================
+    # GARANTIR REGISTRO BASE (🔥 FIX RENDER)
+    # =========================
+
+    data = load_user_data(username)
+
+    if not data or "responses" not in data:
+        data = _empty_payload(username)
+        save_app_user_data(username=username, app_id=APP_ID, payload=data)
+
+    # =========================
     # PAYLOAD
     # =========================
 
@@ -122,6 +132,7 @@ def save_question_response(
     elif question_type == "multipla_escolha":
         if not isinstance(alternativas, dict):
             alternativas = {}
+
         payload["alternativas"] = alternativas
         payload["resposta_escolhida"] = (
             "" if resposta is None else str(resposta).strip()
@@ -135,14 +146,6 @@ def save_question_response(
     # SAVE (CORE)
     # =========================
 
-    # updated = update_app_user_question_payload(
-    #     username=username,
-    #     app_id=APP_ID,
-    #     section=section,
-    #     question_id=question_id,
-    #     payload=payload,
-    # )
-
     updated = update_app_user_question_payload(
         username=username,
         app_id=APP_ID,
@@ -151,11 +154,14 @@ def save_question_response(
         payload=payload,
     )
 
+    # DEBUG (remover depois)
     import streamlit as st
     st.write("DEBUG SAVE RETURN:", updated)
 
-    
-    # 🔴 garantir estrutura consistente no retorno
+    # =========================
+    # FALLBACK
+    # =========================
+
     if not isinstance(updated, dict):
         updated = load_user_data(username)
 
