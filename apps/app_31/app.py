@@ -137,7 +137,7 @@ def run() -> None:
         st.warning("Nenhuma etapa foi configurada para este app.")
         return
 
-    visible_tabs = _get_visible_tabs(stage_access)
+    visible_tabs = TABS
 
     if not visible_tabs:
         st.warning("Você ainda não possui etapas liberadas neste aplicativo.")
