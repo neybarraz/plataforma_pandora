@@ -135,6 +135,14 @@ def save_question_response(
     # SAVE (CORE)
     # =========================
 
+    # updated = update_app_user_question_payload(
+    #     username=username,
+    #     app_id=APP_ID,
+    #     section=section,
+    #     question_id=question_id,
+    #     payload=payload,
+    # )
+
     updated = update_app_user_question_payload(
         username=username,
         app_id=APP_ID,
@@ -143,6 +151,10 @@ def save_question_response(
         payload=payload,
     )
 
+    import streamlit as st
+    st.write("DEBUG SAVE RETURN:", updated)
+
+    
     # 🔴 garantir estrutura consistente no retorno
     if not isinstance(updated, dict):
         updated = load_user_data(username)
