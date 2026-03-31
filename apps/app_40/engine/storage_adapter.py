@@ -5,11 +5,12 @@ def save_answer(
     username,
     node_id,
     question_id,
-    value,
     *,
-    tipo="texto",
-    pergunta="",
+    tipo,
+    pergunta,
+    resposta,
     alternativas=None,
+    alternativa_correta="",
 ):
     return save_question_response(
         username=username,
@@ -17,6 +18,7 @@ def save_answer(
         question_id=f"{node_id}.{question_id}",
         question_type=tipo,
         pergunta=pergunta,
-        resposta=value,
+        resposta=resposta,
         alternativas=alternativas,
+        alternativa_correta=alternativa_correta,
     )
