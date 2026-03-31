@@ -127,7 +127,12 @@ def run_engine(username: str):
                 full_id = f"{node_id}.{qid}"
                 widget_key = f"engine_{full_id}"
 
-                valor_salvo = responses.get(full_id, {}).get("resposta", "")
+                item = responses.get(full_id, {})
+
+                if item.get("tipo") == "multipla_escolha":
+                    valor_salvo = item.get("resposta_escolhida", "")
+                else:
+                    valor_salvo = item.get("resposta", "")
 
                 # 🔥 hidratação correta
                 if widget_key not in st.session_state:
@@ -139,12 +144,13 @@ def run_engine(username: str):
                 )
 
                 if st.button("💾 Salvar", key=f"save_{full_id}"):
-
                     save_answer(
                         username=username,
                         node_id=node_id,
                         question_id=qid,
-                        value=st.session_state[widget_key],
+                        tipo="texto",
+                        pergunta=bloco.get("pergunta", ""),
+                        resposta=st.session_state[widget_key],
                     )
 
                     st.success("Salvo!")
@@ -161,7 +167,12 @@ def run_engine(username: str):
                 full_id = f"{node_id}.{qid}"
                 widget_key = f"engine_{full_id}"
 
-                valor_salvo = responses.get(full_id, {}).get("resposta", "")
+                item = responses.get(full_id, {})
+
+                if item.get("tipo") == "multipla_escolha":
+                    valor_salvo = item.get("resposta_escolhida", "")
+                else:
+                    valor_salvo = item.get("resposta", "")
 
                 if widget_key not in st.session_state:
                     if valor_salvo in opcoes:
@@ -177,14 +188,16 @@ def run_engine(username: str):
                 )
 
                 if st.button("💾 Salvar", key=f"save_{full_id}"):
-
                     save_answer(
                         username=username,
                         node_id=node_id,
                         question_id=qid,
-                        value=st.session_state[widget_key],
+                        tipo="multipla_escolha",
+                        pergunta=bloco.get("pergunta", ""),
+                        resposta=st.session_state[widget_key],
+                        alternativas=alternativas,
+                        alternativa_correta=bloco.get("alternativa_correta", ""),
                     )
-
                     st.success("Salvo!")
 
             # -------------------------
