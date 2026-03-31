@@ -13,7 +13,6 @@ def using_postgres() -> bool:
 
 import streamlit as st
 import os
-
 st.write("DEBUG DATABASE_URL:", os.getenv("DATABASE_URL"))
 
 
