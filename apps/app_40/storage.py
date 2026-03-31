@@ -123,6 +123,9 @@ def save_question_response(
         payload["resposta_escolhida"] = (
             "" if resposta is None else str(resposta).strip()
         )
+        payload["alternativa_correta"] = str(
+            kwargs.get("alternativa_correta", "")
+        ).strip()
 
     else:
         raise ValueError(f"Tipo inválido: {question_type}")
