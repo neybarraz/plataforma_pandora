@@ -14,7 +14,7 @@ def save_answer(
 ):
     return save_question_response(
         username=username,
-        section="engine",
+        section="problema",
         question_id=f"{node_id}.{question_id}",
         question_type=tipo,
         pergunta=pergunta,
