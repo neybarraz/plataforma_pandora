@@ -65,6 +65,19 @@ def reset_to_home() -> None:
 
 
 def main() -> None:
+    st.markdown(
+        """
+        <style>
+            .block-container {
+                max-width: 1100px;
+                padding-left: 2rem;
+                padding-right: 2rem;
+                margin: auto;
+            }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
     st.set_page_config(page_title="Plataforma", layout="wide")
 
     st.session_state.setdefault("current_view", "home")
