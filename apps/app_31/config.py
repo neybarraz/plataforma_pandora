@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-APP_ID = "app_30"
+APP_ID = "app_31"
 
 APP_TITLE = "Sistemas de Bombeamento de Água"
 APP_SUBTITLE = "Eletricidade Aplicada"
