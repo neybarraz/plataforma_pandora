@@ -44,11 +44,11 @@ APP_CATALOG = [
         "description": "Investigue como sistemas eletrônicos garantem continuidade de energia quando ocorre falha na alimentação principal. Explore o funcionamento de sensores, microcontroladores e circuitos de reserva utilizados em dispositivos baseados em ESP32."
     },
     {
-        "app_id": "app_12",
-        "title": "Sistemas de Bombeamento de Água",
-        "subtitle": "Soluções em Dimensionamento de Fios",
+        "app_id": "app_33",
+        "title": "Física Integrada: experimento x teoria",
+        "subtitle": "Física Experimental II",
         "card_image": "ba001.png",
-        "description": "Explore como motores elétricos, sensores e painéis de controle operam juntos para movimentar água em edifícios e instalações industriais. Entenda o funcionamento dos sistemas de acionamento e controle utilizados no bombeamento moderno."
+        "description": "Explore como experimentos práticos e fundamentos teóricos se confrontam para revelar a física que governa fluidos, calor, campos, luz e a estrutura da matéria. Entenda o funcionamento de 6 experimentos projetados para o ensino de engenharia."
     }
 ]
 
