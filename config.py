@@ -9,7 +9,7 @@ DATABASE_PATH = os.getenv("DATABASE_PATH", "database/db.sqlite")
 
 APP_CATALOG = [
     {
-        "app_id": "app_01",
+        "app_id": "app_32",
         "title": "Conforto Térmico em Ambientes",
         "subtitle": "Termodinâmica Aplicada",
         "card_image": "ct001.png",
