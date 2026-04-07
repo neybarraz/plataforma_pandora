@@ -47,7 +47,7 @@ APP_CATALOG = [
         "app_id": "app_33",
         "title": "Física Integrada: experimento x teoria",
         "subtitle": "Física Experimental II",
-        "card_image": "ba001.png",
+        "card_image": "exp01.png",
         "description": "Explore como experimentos práticos e fundamentos teóricos se confrontam para revelar a física que governa fluidos, calor, campos, luz e a estrutura da matéria. Entenda o funcionamento de 6 experimentos projetados para o ensino de engenharia."
     }
 ]
