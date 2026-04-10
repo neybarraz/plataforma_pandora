@@ -44,6 +44,6 @@ def get_paginas() -> list[dict[str, Any]]:
             _build_conteudo("analise_3_03", "Como modelar a carga?",                analise_3_03,),
             _build_conteudo("analise_3_04", "Como verificar se está carregando corretamente?",  analise_3_04,),
             _build_conteudo("analise_3_05", "Quando o modelo deixa de funcionar?", analise_3_05,),
-            _build_conteudo("analise_3_06", "Procedimento estruturado de diagnóstico", analise_3_06,),
+            _build_conteudo("analise_3_06", "Material Didático", analise_3_06,),
         ]},
     ]
