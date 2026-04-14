@@ -18,8 +18,8 @@ def get_paginas() -> list[dict[str, Any]]:
         {"id": "pagina_1", "titulo_menu": "Conforto Térmico do Ambiente", "conteudos": [
             _build_conteudo("b01_01_01", "Estado Térmico",      b01_01_01),
             _build_conteudo("b01_01_02", "Fluxos de Calor",     b01_01_02),
-            # _build_conteudo("b01_01_03", "Balanço Energético",  b01_01_03),
-            # _build_conteudo("b01_01_04", "Irreversibilidade",   b01_01_04),
+            _build_conteudo("b01_01_03", "Balanço Energético",  b01_01_03),
+            _build_conteudo("b01_01_04", "Irreversibilidade",   b01_01_04),
             # _build_conteudo("b01_01_05", "Intervenção Térmica", b01_01_05),
         ]},
         # {"id": "pagina_2", "titulo_menu": "Proteção e Coordenação Elétrica em Sistemas de Bombeamento", "conteudos": [
