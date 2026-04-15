@@ -55,28 +55,28 @@ def calcular_diagnosticos_sala() -> Dict[str, Dict[str, Optional[float]]]:
     # Mapeamento dos IDs para cada parede
     paredes_config = {
         "norte": {
-            "parede_1": "problema.01.001.0101",  # N1
-            "parede_2": "problema.01.001.0102",  # N2
-            "ar_1": "problema.01.001.1003",      # NO
-            "ar_2": "problema.01.001.1004"       # NE
+            "parede_1": "problema.01.001.1007",  # N1
+            "parede_2": "problema.01.001.1008",  # N2
+            "ar_1": "problema.01.001.1002",      # NO
+            "ar_2": "problema.01.001.1003"       # NE
         },
         "sul": {
             "parede_1": "problema.01.001.1011",  # S1
             "parede_2": "problema.01.001.1012",  # S2
-            "ar_1": "problema.01.001.1001",      # SO
-            "ar_2": "problema.01.001.1002"       # SE
+            "ar_1": "problema.01.001.1004",      # SO
+            "ar_2": "problema.01.001.1005"       # SE
         },
         "leste": {
-            "parede_1": "problema.01.001.1021",  # L1
-            "parede_2": "problema.01.001.1022",  # L2
-            "ar_1": "problema.01.001.1005",      # LO
-            "ar_2": "problema.01.001.1006"       # LE
+            "parede_1": "problema.01.001.1009",  # L1
+            "parede_2": "problema.01.001.1010",  # L2
+            "ar_1": "problema.01.001.1003",      # NE
+            "ar_2": "problema.01.001.1005"       # SE
         },
         "oeste": {
-            "parede_1": "problema.01.001.1031",  # O1
-            "parede_2": "problema.01.001.1032",  # O2
-            "ar_1": "problema.01.001.1007",      # OO
-            "ar_2": "problema.01.001.1008"       # OE
+            "parede_1": "problema.01.001.1013",  # O1
+            "parede_2": "problema.01.001.1014",  # O2
+            "ar_1": "problema.01.001.1002",      # NO
+            "ar_2": "problema.01.001.1004"       # SO
         }
     }
     
