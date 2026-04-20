@@ -4,8 +4,8 @@ from pathlib import Path
 
 APP_ID = "app_30"
 
-APP_TITLE = "Física para o Ensino de Ciências II"
-APP_SUBTITLE = "Tópicos em Eletromagnetismo"
+APP_TITLE = "Tópicos em Eletromagnetismo"
+APP_SUBTITLE = "Física para o Ensino de Ciências II"
 
 BASE_DIR = Path(__file__).resolve().parent
 QUESTIONS_DIR = BASE_DIR / "questions"
