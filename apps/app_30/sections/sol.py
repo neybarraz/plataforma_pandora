@@ -21,7 +21,7 @@ from ..ui.layout import (
 
 SECTION_KEY = "solucao"
 
-APP_DIR = Path(__file__).resolve().parents[2]
+APP_DIR = Path(__file__).resolve().parents[1]
 ASSETS_DIR = APP_DIR / "assets"
 
 def _inject_visual_css() -> None:
@@ -37,13 +37,20 @@ def _refresh_question_counters(username: str) -> None:
     st.session_state.solucao_total_questoes = stats["total_questoes"]
     st.session_state.solucao_respondidas = stats["respondidas"]
 
+
 def _render_topo() -> None:
     render_topo_html(
         "solucao-topo",
         """
-        sol
+        O estudo do magnetismo se baseia em duas leis fundamentais. 
+        A Lei de Ampère mostra como correntes elétricas geram campos magnéticos, princípio dos motores e eletroímãs. 
+        A Lei de Faraday mostra como campos magnéticos variáveis geram corrente elétrica, princípio dos geradores, transformadores e carregadores sem fio. 
+        Juntas, elas formam o núcleo do eletromagnetismo. 
+        Você conhecerá os experimentos de Ørsted, Ampère e Faraday, enfrentará desafios de engenharia (como projetar motores e carregadores) e 
+        resolverá problemas práticos conectando teoria e aplicação.
         """,
     )
+
 
 def _titulo_destaque(texto: str, nivel: int = 2) -> None:
     render_titulo_destaque(texto, nivel=nivel)
@@ -230,6 +237,8 @@ def _hydrate_widgets_from_file(
     section_answers = _extract_section_answers(data)
 
     for bloco in conteudo["blocos"]:
+
+    
         if bloco["tipo"] not in {"questao_texto", "questao_multipla_escolha"}:
             continue
 
@@ -440,7 +449,11 @@ def _render_bloco_pedagogico(
             caption=bloco.get("caption", ""),
         )
         return
-
+    
+    if tipo == "equacao":
+        st.latex(bloco.get("latex", ""))
+        return
+    
     if tipo == "simulacao_estado":
         render_simulacao_estado(bloco)
         return
@@ -451,8 +464,6 @@ def _render_bloco_pedagogico(
 
         if bloco.get("descricao"):
             _texto_bloco(bloco["descricao"])
-
-        render_simulador_conversor_didatico()
 
         if bloco.get("pergunta_guiada"):
             st.info(bloco["pergunta_guiada"])
@@ -657,5 +668,5 @@ def render(
     with col_conteudo:
         _render_conteudo_pedagogico(username, conteudo_atual, paginas)
         _espacamento_linha()
-        _status_salvamento()
+        # _status_salvamento()
 
