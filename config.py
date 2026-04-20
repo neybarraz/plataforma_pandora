@@ -38,10 +38,10 @@ APP_CATALOG = [
     },
     {
         "app_id": "app_30",
-        "title": "Backup de Energia em Circuitos Eletrônicos",
-        "subtitle": "Energia de Reserva na Prática",
-        "card_image": "el001.png",
-        "description": "Investigue como sistemas eletrônicos garantem continuidade de energia quando ocorre falha na alimentação principal. Explore o funcionamento de sensores, microcontroladores e circuitos de reserva utilizados em dispositivos baseados em ESP32."
+        "title": "Tópicos em Eletromagnetismo",
+        "subtitle": "Física para o Ensino de Ciências II",
+        "card_image": "av002.png",
+        "description": " "
     },
     {
         "app_id": "app_33",
