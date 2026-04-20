@@ -4,8 +4,8 @@ from pathlib import Path
 
 APP_ID = "app_30"
 
-APP_TITLE = "Backup de Energia em Circuitos Eletrônicos"
-APP_SUBTITLE = "Energia de Reserva na Prática"
+APP_TITLE = "Física para o Ensino de Ciências II"
+APP_SUBTITLE = "Tópicos em Eletromagnetismo"
 
 BASE_DIR = Path(__file__).resolve().parent
 QUESTIONS_DIR = BASE_DIR / "questions"
@@ -18,7 +18,7 @@ TABS = [
     # {"key": "visao_geral", "label": "Disciplina"},
     # {"key": "problema", "label": "Elétrico"},
     {"key": "investigacao", "label": "Circuitos"},
-    # {"key": "solucao", "label": "Magnetismo"},
+    {"key": "solucao", "label": "Magnetismo"},
 ]
 
 TAB_KEYS = [tab["key"] for tab in TABS]
