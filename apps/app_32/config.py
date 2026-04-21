@@ -2,9 +2,9 @@ from __future__ import annotations
 
 from pathlib import Path
 
-APP_ID = "app_31"
+APP_ID = "app_32"
 
-APP_TITLE = "Termodinâmica"
+APP_TITLE = "Física Clássica Aplicada"
 APP_SUBTITLE = "Física II"
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -16,8 +16,8 @@ RESPONSES_DIR = BASE_DIR / "data" / "responses"
 
 TABS = [
     {"key": "problema", "label": "Termodinâmica"},
-    # {"key": "investigacao", "label": "Circuitos"},
-    # {"key": "solucao", "label": "Magnetismo"},
+    # {"key": "investigacao", "label": "Mecânica e Ondas"},
+    {"key": "solucao", "label": "Fluidos"},
 ]
 
 TAB_KEYS = [tab["key"] for tab in TABS]
