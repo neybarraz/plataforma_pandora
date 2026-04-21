@@ -143,9 +143,9 @@ def run() -> None:
         st.warning("Você ainda não possui etapas liberadas neste aplicativo.")
         return
 
-    # active_tab = _ensure_active_tab(visible_tabs)
-    # _render_main_tabs(visible_tabs)
-    active_tab = visible_tabs[0]["key"]
+    active_tab = _ensure_active_tab(visible_tabs)
+    _render_main_tabs(visible_tabs)
+    # active_tab = visible_tabs[0]["key"]
 
     _render_active_section(
         section_key=active_tab,
